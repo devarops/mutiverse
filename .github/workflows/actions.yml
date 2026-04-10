@@ -9,8 +9,8 @@ jobs:
     - name: Copia repositorio
       uses: actions/checkout@v2
     - name: Construye imagen
-      run: docker build --tag muter .
+      run: docker build --tag mutiverse .
     - name: Verifica el formato
-      run: docker run muter make check
+      run: docker run mutiverse make check
     - name: Corre pruebas
-      run: docker run muter make tests
+      run: docker run mutiverse make tests
