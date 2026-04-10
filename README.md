@@ -96,6 +96,23 @@ The framework produces:
 
 ---
 
+## Core Mutation Operators
+
+The following table defines a minimal, language-agnostic set of mutation operators used as a baseline across plug-ins. These operators target fundamental programming constructs (constants, arithmetic, comparisons, and boolean logic) and are designed to provide high signal with low redundancy. Additional, language-specific operators can be defined within each plug-in.
+
+| id                    | operator       | description                      |
+| --------------------- | -------------- | -------------------------------- |
+| CONSTANT_NUMERIC_FLIP | `0 ↔ 1`        | Flip basic numeric constants     |
+| CONSTANT_BOOLEAN_FLIP | `true ↔ false` | Invert boolean literals          |
+| EQUALITY_OPERATOR     | `== ↔ !=`      | Invert equality comparison       |
+| RELATIONAL_GT         | `> ↔ <=`       | Invert greater-than boundary     |
+| RELATIONAL_LT         | `< ↔ >=`       | Invert less-than boundary        |
+| ARITHMETIC_ADD_SUB    | `+ ↔ -`        | Swap addition and subtraction    |
+| ARITHMETIC_MUL_DIV    | `* ↔ /`        | Swap multiplication and division |
+| LOGICAL_NEGATION      | `expr → !expr` | Negate boolean expression        |
+
+---
+
 ## Summary
 
 The project defines a mutation testing framework where:
