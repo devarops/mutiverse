@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: evaristor/muter:latest
+    image: evaristor/mutiverse:latest
     command: bash
     volumes:
       - $PWD:/workdir
