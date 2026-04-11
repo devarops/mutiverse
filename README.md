@@ -6,7 +6,7 @@ At its core, the system separates responsibilities into a host application and a
 
 ## Architecture Overview
 
-<img width="1536" height="1024" alt="Mutation testing framework diagram" src="assests/mutation-testing-framework-diagram.png" />
+<img width="1536" height="1024" alt="Mutation testing framework diagram" src="https://raw.githubusercontent.com/devarops/mutiverse/refs/heads/develop/assets/mutation-testing-framework-diagram.png" />
 
 ### Core Host Application
 
