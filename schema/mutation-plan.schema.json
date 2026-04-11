@@ -63,7 +63,16 @@
         },
         "operator": {
           "type": "string",
-          "minLength": 1,
+          "enum": [
+            "CONSTANT_NUMERIC_FLIP",
+            "CONSTANT_BOOLEAN_FLIP",
+            "EQUALITY_OPERATOR",
+            "RELATIONAL_GT",
+            "RELATIONAL_LT",
+            "ARITHMETIC_ADD_SUB",
+            "ARITHMETIC_MUL_DIV",
+            "LOGICAL_NEGATION"
+          ],
           "description": "Mutation operator identifier"
         }
       }
