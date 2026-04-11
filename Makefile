@@ -4,26 +4,17 @@ all:
 .PHONY: \
 	all \
 	check \
-	clean \
-	init \
 	parse \
-	setup \
 	tests
 
 check:
 	luacheck src
 
-clean:
-	rm --force --recursive templater
-
-init: setup parse tests
-
-setup: clean
-	git clone https://github.com/IslasGECI/templater.git
-	cd templater && make init
-
 tests:
 	busted tests/test.lua
 
 parse:
-	tree-sitter parse --lib-path /opt/tree-sitter-r/r.so templater/R/do_nothing.R
+	tree-sitter parse --xml --lib-path /opt/tree-sitter-python/python.so tests/data/transformations.py
+	tree-sitter parse --xml --lib-path /opt/tree-sitter-r/r.so tests/data/do_nothing.R
+	tree-sitter parse --cst --lib-path /opt/tree-sitter-python/python.so tests/data/transformations.py
+	tree-sitter parse --cst --lib-path /opt/tree-sitter-r/r.so tests/data/do_nothing.R
