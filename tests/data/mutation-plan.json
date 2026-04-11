@@ -9,6 +9,16 @@
       "original": "1",
       "replacement": "0",
       "operator": "CONSTANT_NUMERIC_FLIP"
+    },
+    {
+      "file_path": "tests/data/do_nothing.R",
+      "start_row": 1,
+      "end_row": 1,
+      "start_col": 9,
+      "end_col": 10,
+      "original": "1",
+      "replacement": "0",
+      "operator": "CONSTANT_NUMERIC_FLIP"
     }
   ]
 }
