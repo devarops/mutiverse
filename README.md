@@ -4,8 +4,6 @@ This project is a **language-agnostic mutation testing framework** designed arou
 
 At its core, the system separates responsibilities into a **host application** and a set of **language-specific plug-ins**, following principles similar to the extension model used by Neovim.
 
----
-
 ## Architecture Overview
 
 ### Core Host Application
@@ -18,9 +16,7 @@ The core system is responsible for:
 * Determining whether mutants survive or are killed
 * Producing outputs (diffs of surviving mutants)
 
-The core remains **agnostic to programming languages**, relying entirely on plug-ins for mutation definitions.
-
----
+The core remains **agnostic to programming languages and parsing strategies**, relying entirely on plug-ins for mutation discovery.
 
 ### Plug-in System
 
@@ -28,25 +24,29 @@ Each plug-in is an independent repository that provides:
 
 * A **catalog of mutation operators** specific to a programming language
 * Definitions of how source code can be transformed (e.g., `== → !=`, `> → <`, `+ → -`)
-* Use of pre-existing grammars from Tree-sitter
+* A mechanism to analyze source code and produce mutation candidates
+
+**Implementation note**
+
+Plug-ins are expected to perform **syntax-aware analysis**. In practice, most plug-ins will rely on **Tree-sitter grammars** to achieve this.
+
+However:
+
+> Tree-sitter is a **recommended implementation strategy, not a host responsibility**.
 
 Key properties:
 
 * Plug-ins are **decoupled** from the core and from each other
 * Users are responsible for **discovering and selecting** plug-ins
-* The system is **extensible to any language** with a compatible plug-in
-
----
+* The system is **extensible to any language**, regardless of the parsing technology used
 
 ## Mutation Model
 
 * A small set of **universal mutation operators** (2–3) may be required across all languages
 * Most mutations are **language-specific**, defined entirely within each plug-in
-* Mutations are applied in a **syntax-aware manner** using Tree-sitter, avoiding fragile text-based approaches such as regex or line-based parsing
+* Mutations are expected to be **syntax-aware**, avoiding fragile text-based approaches such as regex or line-based parsing
 
 This enables precise and structurally valid transformations of source code.
-
----
 
 ## Execution Workflow
 
@@ -58,8 +58,9 @@ This enables precise and structurally valid transformations of source code.
 
 2. The core:
 
-   * Parses code using Tree-sitter-based structures
-   * Applies mutations from the selected plug-in(s)
+   * Delegates mutation discovery to the selected plug-in(s)
+   * Receives mutation candidates (text ranges + replacements)
+   * Applies mutations and generates mutants
    * Runs the test suite for each mutant
 
 3. Results:
@@ -67,7 +68,37 @@ This enables precise and structurally valid transformations of source code.
    * Mutants that **fail tests** are discarded (killed)
    * Mutants that **pass tests** are retained (survived)
 
----
+## Plug-in Contract
+
+Plug-ins communicate with the host through a minimal, language-agnostic interface.
+
+### Input (from host)
+
+```json
+{
+  "file_path": "path/to/file",
+  "source": "...raw source code..."
+}
+```
+
+### Output (to host)
+
+```json
+{
+  "mutations": [
+    {
+      "file": "path/to/file",
+      "start_byte": 11,
+      "end_byte": 12,
+      "original": "1",
+      "replacement": "0",
+      "operator": "CONSTANT_NUMERIC_FLIP"
+    }
+  ]
+}
+```
+
+The host **does not interpret syntax trees** and **does not depend on any parsing technology**. It consumes mutation candidates blindly.
 
 ## Output
 
@@ -76,25 +107,19 @@ The framework produces:
 * A **list of surviving mutants**, represented as diffs (similar to `git diff`)
 * These diffs highlight weaknesses in the test suite by showing undetected behavioral changes
 
----
-
 ## Versioning and Compatibility
 
 * Plug-ins and the core follow **semantic versioning**
 * Compatibility is enforced at the **major version level**
 * This allows independent evolution of plug-ins while maintaining a stable contract with the core
 
----
-
 ## Design Principles
 
 * **Language independence** via plug-in isolation
 * **Extensibility** without modifying the core
-* **Syntax-aware transformations** using Tree-sitter
-* **User-controlled environment** (test execution and plug-in selection)
-* **Minimal core responsibilities**, delegating domain knowledge to plug-ins
-
----
+* **Syntax-aware transformations** implemented within plug-ins
+* **Minimal core responsibilities**, delegating all language knowledge to plug-ins
+* **Implementation flexibility**, allowing plug-ins to choose their parsing strategy (Tree-sitter recommended)
 
 ## Core Mutation Operators
 
@@ -111,14 +136,12 @@ The following table defines a minimal, language-agnostic set of mutation operato
 | ARITHMETIC_MUL_DIV    | `* ↔ /`        | Swap multiplication and division |
 | LOGICAL_NEGATION      | `expr → !expr` | Negate boolean expression        |
 
----
-
 ## Summary
 
 The project defines a mutation testing framework where:
 
 * The **core system orchestrates execution and evaluation**
 * **Plug-ins define how code is mutated per language**
-* **Tree-sitter enables precise, structure-aware transformations**
+* Plug-ins are responsible for **syntax-aware analysis** (commonly using Tree-sitter)
 
 This architecture enables scalable support for multiple languages while maintaining a small, stable, and focused core.
