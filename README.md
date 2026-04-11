@@ -8,6 +8,7 @@ At its core, the system separates responsibilities into a host application and a
 
 <img width="1536" height="1024" alt="ChatGPT Image Apr 10, 2026, 07_10_20 PM" src="https://github.com/user-attachments/assets/f9e86966-9af2-48d0-88ff-1bc29fccc50c" />
 
+![(Mutation testing framework diagram](mutation-testing-framework-diagram.png)
 
 ### Core Host Application
 
