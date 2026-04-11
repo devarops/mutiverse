@@ -87,7 +87,7 @@ Plug-ins communicate with the host through a minimal, language-agnostic interfac
 {
   "mutations": [
     {
-      "file": "path/to/file",
+      "file_path": "path/to/file",
       "start_byte": 11,
       "end_byte": 12,
       "original": "1",
