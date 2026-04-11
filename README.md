@@ -26,13 +26,11 @@ Each plug-in is an independent repository that provides:
 * Definitions of how source code can be transformed (e.g., `== → !=`, `> → <`, `+ → -`)
 * A mechanism to analyze source code and produce mutation candidates
 
-Implementation note
+Plug-ins are expected to perform syntax-aware analysis.
+In practice, most plug-ins rely on Tree-sitter grammars.
 
-Plug-ins are expected to perform syntax-aware analysis. In practice, most plug-ins will rely on Tree-sitter grammars to achieve this.
-
-However:
-
-> Tree-sitter is a recommended implementation strategy, not a host responsibility.
+A shared Tree-sitter environment may be provided to simplify plug-in development.
+However, this is optional infrastructure and not a responsibility of the host application.
 
 Key properties:
 
