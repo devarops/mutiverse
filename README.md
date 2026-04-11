@@ -16,7 +16,7 @@ The core system is responsible for:
 * Determining whether mutants survive or are killed
 * Producing outputs (diffs of surviving mutants)
 
-The core remains agnostic to programming languages and parsing strategies, relying entirely on plug-ins for mutation discovery.
+The core remains agnostic to programming languages and parsing strategies, and operates only on raw source code and mutation candidates provided by plug-ins.
 
 ### Plug-in System
 
@@ -27,7 +27,7 @@ Each plug-in is an independent repository that provides:
 * A mechanism to analyze source code and produce mutation candidates
 
 Plug-ins are expected to perform syntax-aware analysis.
-In practice, most plug-ins rely on Tree-sitter grammars.
+In practice, most plug-ins rely on Tree-sitter grammars for syntax-aware analysis.
 
 A shared Tree-sitter environment may be provided to simplify plug-in development.
 However, this is optional infrastructure and not a responsibility of the host application.
@@ -97,6 +97,24 @@ Plug-ins communicate with the host through a minimal, language-agnostic interfac
 ```
 
 The host does not interpret syntax trees and does not depend on any parsing technology. It consumes mutation candidates blindly.
+
+### Contract Invariants
+
+- The contract is strictly text-based
+- No ASTs or parser-specific structures are exchanged
+- Mutation locations must be expressed as byte ranges over the original source
+- The host applies mutations without interpreting their semantics
+
+## Architectural Constraints
+
+The following constraints define the boundaries of the system:
+
+- The host must not depend on Tree-sitter or any parsing library
+- The host must not inspect or manipulate syntax trees
+- The host operates only on raw source code and byte ranges
+- Plug-ins fully own parsing and syntax analysis
+- Plug-ins must not rely on host-provided parsing results
+- The only shared contract between host and plug-ins is mutation candidates
 
 ## Output
 
