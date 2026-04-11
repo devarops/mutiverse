@@ -1,0 +1,14 @@
+{
+  "mutations": [
+    {
+      "file_path": "tests/data/transformations.py",
+      "start_row": 1,
+      "end_row": 1,
+      "start_col": 11,
+      "end_col": 12,
+      "original": "1",
+      "replacement": "0",
+      "operator": "CONSTANT_NUMERIC_FLIP"
+    }
+  ]
+}

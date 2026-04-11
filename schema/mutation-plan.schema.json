@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/devarops/mutiverse/blob/develop/schema/mutation-plan.schema.json",
+  "title": "Mutiverse Mutation Set",
+  "type": "object",
+  "required": ["mutations"],
+  "additionalProperties": false,
+  "properties": {
+    "mutations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mutation"
+      }
+    }
+  },
+  "$defs": {
+    "mutation": {
+      "type": "object",
+      "required": [
+        "file_path",
+        "start_row",
+        "end_row",
+        "start_col",
+        "end_col",
+        "original",
+        "replacement",
+        "operator"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "file_path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to the source file"
+        },
+        "start_row": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based starting row"
+        },
+        "end_row": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based ending row (inclusive or exclusive depending on convention)"
+        },
+        "start_col": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based starting column"
+        },
+        "end_col": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based ending column (exclusive)"
+        },
+        "original": {
+          "type": "string",
+          "description": "Original text to be replaced"
+        },
+        "replacement": {
+          "type": "string",
+          "description": "Replacement text"
+        },
+        "operator": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Mutation operator identifier"
+        }
+      }
+    }
+  }
+}
