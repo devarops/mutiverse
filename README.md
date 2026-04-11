@@ -88,10 +88,12 @@ Plug-ins communicate with the host through a minimal, language-agnostic interfac
   "mutations": [
     {
       "file_path": "path/to/file",
-      "start_byte": 11,
-      "end_byte": 12,
-      "original": "1",
-      "replacement": "0",
+      "start_row": 2,
+      "end_row": 2,
+      "start_col": 13,
+      "end_col": 14,
+      "original": "0",
+      "replacement": "1",
       "operator": "CONSTANT_NUMERIC_FLIP"
     }
   ]
