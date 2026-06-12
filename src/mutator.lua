@@ -56,11 +56,13 @@ function mutator.apply_mutation_to_file(mutation, input_path, output_path)
 end
 
 function mutator.run_test(command)
-    local success = os.execute(command)
-    if success then
+    local exit_code = os.execute(command)
+    if exit_code == 0 then
         print("👾 survived")
+    else
+        print("🗡 killed")
     end
-    return not success
+    return exit_code ~= 0
 end
 
 return mutator
