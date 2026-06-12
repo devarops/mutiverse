@@ -39,7 +39,7 @@ local function replace_at_location(mutation, source)
     return table.concat(lines, "\n")
 end
 
-local function replace_globally(mutation, source)
+local function replace_all(mutation, source)
     local original = mutation.original
     local replacement = mutation.replacement
     local escaped_original = escape_pattern(original)
@@ -69,7 +69,7 @@ function mutator.apply_mutation(mutation, source)
     if has_location(mutation) then
         return replace_at_location(mutation, source)
     end
-    return replace_globally(mutation, source)
+    return replace_all(mutation, source)
 end
 
 function mutator.apply_plan(plan, source)
