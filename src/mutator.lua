@@ -43,12 +43,16 @@ end
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
 
+local function has_location(mutation)
+    return mutation.start_row ~= nil
+end
+
 function mutator.has_mutations_field(plan)
     return plan.mutations ~= nil
 end
 
 function mutator.apply_mutation(mutation, source)
-    if mutation.start_row ~= nil then
+    if has_location(mutation) then
         return replace_at_location(mutation, source)
     end
     return replace_globally(mutation, source)
