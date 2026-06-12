@@ -13,18 +13,22 @@ local function split_lines(text)
     return lines
 end
 
+local function replace_in_line(mutation, line)
+    local original_at_location = line:sub(mutation.start_col + 1, mutation.end_col)
+    if original_at_location ~= mutation.original then
+        error("original text does not match at specified location")
+    end
+    local before = line:sub(1, mutation.start_col)
+    local after = line:sub(mutation.end_col + 1)
+    return before .. mutation.replacement .. after
+end
+
 local function replace_at_location(mutation, source)
     local lines = split_lines(source)
     local line_index = mutation.start_row + 1
     local line = lines[line_index]
     if line then
-        local original_at_location = line:sub(mutation.start_col + 1, mutation.end_col)
-        if original_at_location ~= mutation.original then
-            error("original text does not match at specified location")
-        end
-        local before = line:sub(1, mutation.start_col)
-        local after = line:sub(mutation.end_col + 1)
-        lines[line_index] = before .. mutation.replacement .. after
+        lines[line_index] = replace_in_line(mutation, line)
     end
     return table.concat(lines, "\n")
 end
