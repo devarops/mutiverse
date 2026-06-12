@@ -31,11 +31,11 @@ function mutator.apply_mutation_to_file(mutation, source_path, output_path)
 end
 
 function mutator.apply_plan(plan, source)
-    local result = source
+    local mutated_source = source
     for _, mutation in ipairs(plan.mutations) do
-        result = mutator.apply_mutation(mutation, result)
+        mutated_source = mutator.apply_mutation(mutation, mutated_source)
     end
-    return result
+    return mutated_source
 end
 
 return mutator
