@@ -9,7 +9,8 @@ local function replace_at_location(mutation, source)
     for line in source:gmatch("[^\n]+") do
         lines[#lines + 1] = line
     end
-    local line = lines[mutation.start_row + 1]
+    local line_index = mutation.start_row + 1
+    local line = lines[line_index]
     if line then
         local original_at_location = line:sub(mutation.start_col + 1, mutation.end_col)
         if original_at_location ~= mutation.original then
@@ -17,7 +18,7 @@ local function replace_at_location(mutation, source)
         end
         local before = line:sub(1, mutation.start_col)
         local after = line:sub(mutation.end_col + 1)
-        lines[mutation.start_row + 1] = before .. mutation.replacement .. after
+        lines[line_index] = before .. mutation.replacement .. after
     end
     return table.concat(lines, "\n")
 end
