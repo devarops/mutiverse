@@ -13,8 +13,8 @@ local function split_lines(text)
     return lines
 end
 
-local function assert_text_matches(mutation, target_line, start_pos)
-    local actual_text = target_line:sub(start_pos, mutation.end_col)
+local function assert_text_matches(mutation, target_line)
+    local actual_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
     assert(
         actual_text == mutation.original,
         "original text does not match at specified location"
@@ -22,9 +22,8 @@ local function assert_text_matches(mutation, target_line, start_pos)
 end
 
 local function replace_in_line(mutation, target_line)
-    local start_pos = mutation.start_col + 1
-    assert_text_matches(mutation, target_line, start_pos)
-    local prefix = target_line:sub(1, start_pos - 1)
+    assert_text_matches(mutation, target_line)
+    local prefix = target_line:sub(1, mutation.start_col)
     local suffix = target_line:sub(mutation.end_col + 1)
     return prefix .. mutation.replacement .. suffix
 end
