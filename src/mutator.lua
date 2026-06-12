@@ -47,10 +47,6 @@ local function has_location(mutation)
     return mutation.start_row ~= nil
 end
 
-function mutator.has_mutations_field(plan)
-    return plan.mutations ~= nil
-end
-
 function mutator.apply_mutation(mutation, source)
     if has_location(mutation) then
         return replace_at_location(mutation, source)
