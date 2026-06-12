@@ -1,5 +1,3 @@
-local file_io = require("file_io")
-
 local mutator = {}
 
 local function escape_pattern(text)
@@ -16,6 +14,7 @@ function mutator.apply_mutation(mutation, source)
 end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
+    local file_io = require("file_io")
     local source = file_io.read(input_path)
     local result = mutator.apply_mutation(mutation, source)
     file_io.write(output_path, result)
