@@ -25,8 +25,6 @@ local function assert_original_matches_at_location(mutation, target_line)
 end
 
 local function replace_in_line(mutation, target_line)
-    assert_original_matches_at_location(mutation, target_line)
-
     local prefix = target_line:sub(1, mutation.start_col)
     local suffix = target_line:sub(mutation.end_col + 1)
     return prefix .. mutation.replacement .. suffix
@@ -41,6 +39,7 @@ local function replace_at_location(mutation, source)
     local target_line_index = mutation.start_row + 1
     local target_line = lines[target_line_index]
     if target_line then
+        assert_original_matches_at_location(mutation, target_line)
         lines[target_line_index] = replace_in_line(mutation, target_line)
     end
     return join_lines(lines)
