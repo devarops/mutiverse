@@ -1,16 +1,16 @@
 local mutator = {}
 
 function mutator.read_file(path)
-    local f = io.open(path, "r")
-    local content = f:read("*a")
-    f:close()
+    local file = io.open(path, "r")
+    local content = file:read("*a")
+    file:close()
     return content
 end
 
 function mutator.write_file(path, content)
-    local f = io.open(path, "w")
-    f:write(content)
-    f:close()
+    local file = io.open(path, "w")
+    file:write(content)
+    file:close()
 end
 
 function mutator.is_valid(plan)
