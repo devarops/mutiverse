@@ -52,14 +52,6 @@ end
 local SURVIVED_MESSAGE = "👾 survived"
 local KILLED_MESSAGE = "🏹 killed"
 
-local function report_mutation_outcome(exit_code)
-    if exit_code == 0 then
-        print(SURVIVED_MESSAGE)
-    else
-        print(KILLED_MESSAGE)
-    end
-end
-
 function mutator.has_mutations(plan)
     return plan.mutations ~= nil
 end
@@ -87,7 +79,11 @@ end
 
 function mutator.run_test(command)
     local exit_code = os.execute(command)
-    report_mutation_outcome(exit_code)
+    if exit_code == 0 then
+        print(SURVIVED_MESSAGE)
+    else
+        print(KILLED_MESSAGE)
+    end
     return exit_code ~= 0
 end
 
