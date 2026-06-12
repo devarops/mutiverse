@@ -20,10 +20,10 @@ local function replace_at_range(text, start_pos, end_pos, replacement)
 end
 
 local function replace_in_line(mutation, target_line)
-    local column_start, column_end = mutation.start_col + 1, mutation.end_col
-    local text_at_range = target_line:sub(column_start, column_end)
+    local start_pos, end_pos = mutation.start_col + 1, mutation.end_col
+    local text_at_range = target_line:sub(start_pos, end_pos)
     assert(text_at_range == mutation.original, "original text does not match at specified location")
-    return replace_at_range(target_line, column_start, column_end, mutation.replacement)
+    return replace_at_range(target_line, start_pos, end_pos, mutation.replacement)
 end
 
 local function replace_at_location(mutation, source)
