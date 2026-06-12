@@ -1,7 +1,7 @@
 local kata = {}
 
 function kata.validate(plan)
-    return true
+    return plan.mutations ~= nil
 end
 
 return kata
