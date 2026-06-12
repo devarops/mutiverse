@@ -28,11 +28,6 @@ local function replace_at_location(mutation, source)
     return table.concat(lines, "\n")
 end
 
-local function replace_all(mutation, source)
-    local escaped_original = escape_pattern(mutation.original)
-    return source:gsub(escaped_original, mutation.replacement)
-end
-
 local SURVIVED_MESSAGE = "👾 survived"
 local KILLED_MESSAGE = "🏹 killed"
 
@@ -44,7 +39,8 @@ function mutator.apply_mutation(mutation, source)
     if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
     end
-    return replace_all(mutation, source)
+    local escaped_original = escape_pattern(mutation.original)
+    return source:gsub(escaped_original, mutation.replacement)
 end
 
 function mutator.apply_plan(plan, source)
