@@ -5,6 +5,10 @@ local function remove_if_exists(path)
     if path then os.remove(path) end
 end
 
+local function assert_contains(output, expected)
+    assert.is_true(output:find(expected) ~= nil)
+end
+
 local function run_mutator_test(command)
     local handle = io.popen("lua -e \"package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('" .. command .. "')\"")
     local output = handle:read("*a")
@@ -75,11 +79,11 @@ describe("run_test", function()
 
     it("should print 👾 survived when test command exits with 0", function()
         local output = run_mutator_test("true")
-        assert.is_true(output:find("👾 survived") ~= nil)
+        assert_contains(output, "👾 survived")
     end)
 
     it("should print 🏹 killed when test command exits non-zero", function()
         local output = run_mutator_test("false")
-        assert.is_true(output:find("🏹 killed") ~= nil)
+        assert_contains(output, "🏹 killed")
     end)
 end)
