@@ -27,7 +27,8 @@ end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
     local source = mutator.read_file(input_path)
-    mutator.write_file(output_path, mutator.apply_mutation(mutation, source))
+    local mutated_source = mutator.apply_mutation(mutation, source)
+    mutator.write_file(output_path, mutated_source)
 end
 
 function mutator.apply_plan(plan, source)
