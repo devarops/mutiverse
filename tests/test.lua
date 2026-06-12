@@ -25,6 +25,11 @@ describe("apply_mutation", function()
         local result = mutator.apply_mutation({start_row=0, end_row=0, start_col=4, end_col=5, original="1", replacement="0"}, "x = 1\ny = 1")
         assert.equals("x = 0\ny = 1", result)
     end)
+
+    it("should report an error when original text does not match at the specified location", function()
+        local ok, err = pcall(mutator.apply_mutation, {start_row=0, start_col=0, end_row=0, end_col=1, original="z", replacement="x"}, "abc")
+        assert.is_falsy(ok)
+    end)
 end)
 
 describe("apply_plan", function()
