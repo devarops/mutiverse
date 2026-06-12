@@ -11,6 +11,10 @@ local function replace_at_location(mutation, source)
     end
     local line = lines[mutation.start_row + 1]
     if line then
+        local original_at_location = line:sub(mutation.start_col + 1, mutation.end_col)
+        if original_at_location ~= mutation.original then
+            error("original text does not match at specified location")
+        end
         local before = line:sub(1, mutation.start_col)
         local after = line:sub(mutation.end_col + 1)
         lines[mutation.start_row + 1] = before .. mutation.replacement .. after
