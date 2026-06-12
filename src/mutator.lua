@@ -1,13 +1,13 @@
 local mutator = {}
 
-local function read_file(path)
+function mutator.read_file(path)
     local f = io.open(path, "r")
     local content = f:read("*a")
     f:close()
     return content
 end
 
-local function write_file(path, content)
+function mutator.write_file(path, content)
     local f = io.open(path, "w")
     f:write(content)
     f:close()
@@ -26,9 +26,9 @@ function mutator.apply_mutation(mutation, source)
 end
 
 function mutator.apply_mutation_to_file(mutation, source_path, output_path)
-    local source = read_file(source_path)
+    local source = mutator.read_file(source_path)
     local result = mutator.apply_mutation(mutation, source)
-    write_file(output_path, result)
+    mutator.write_file(output_path, result)
 end
 
 function mutator.apply_plan(plan, source)

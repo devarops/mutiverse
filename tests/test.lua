@@ -1,18 +1,5 @@
 local mutator = require("mutator")
 
-local function write_file(path, content)
-    local f = io.open(path, "w")
-    f:write(content)
-    f:close()
-end
-
-local function read_file(path)
-    local f = io.open(path, "r")
-    local content = f:read("*a")
-    f:close()
-    return content
-end
-
 describe("Validate mutation plan", function()
     it("should accept a valid mutation plan with an empty mutation list", function()
         assert.is_true(mutator.validate({mutations={}}))
@@ -40,11 +27,11 @@ describe("Apply mutation to file", function()
     it("should read source file, apply mutation, and write mutated content to output file", function()
         local source_path = "/tmp/test_mutation_source.lua"
         local output_path = "/tmp/test_mutation_output.lua"
-        write_file(source_path, "return 1")
+        mutator.write_file(source_path, "return 1")
 
         mutator.apply_mutation_to_file({original="1", replacement="0"}, source_path, output_path)
 
-        local result = read_file(output_path)
+        local result = mutator.read_file(output_path)
         assert.equals("return 0", result)
 
         os.remove(source_path)
