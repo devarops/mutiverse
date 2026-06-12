@@ -13,19 +13,19 @@ function mutator.apply_mutation(mutation, source)
     return source:gsub(pattern, mutation.replacement)
 end
 
-function mutator.apply_mutation_to_file(mutation, input_path, output_path)
-    local file_io = require("file_io")
-    local source = file_io.read(input_path)
-    local result = mutator.apply_mutation(mutation, source)
-    file_io.write(output_path, result)
-end
-
 function mutator.apply_plan(plan, source)
     local result = source
     for _, mutation in ipairs(plan.mutations) do
         result = mutator.apply_mutation(mutation, result)
     end
     return result
+end
+
+function mutator.apply_mutation_to_file(mutation, input_path, output_path)
+    local file_io = require("file_io")
+    local source = file_io.read(input_path)
+    local result = mutator.apply_mutation(mutation, source)
+    file_io.write(output_path, result)
 end
 
 return mutator
