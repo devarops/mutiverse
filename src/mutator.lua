@@ -17,12 +17,8 @@ local function join_lines(lines)
     return table.concat(lines, "\n")
 end
 
-local function column_range(mutation)
-    return mutation.start_col + 1, mutation.end_col
-end
-
 local function replace_in_line(mutation, target_line)
-    local col_start, col_end = column_range(mutation)
+    local col_start, col_end = mutation.start_col + 1, mutation.end_col
     local existing_text = target_line:sub(col_start, col_end)
     assert(existing_text == mutation.original, "original text does not match at specified location")
     local prefix = target_line:sub(1, col_start - 1)
