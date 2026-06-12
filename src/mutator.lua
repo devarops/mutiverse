@@ -25,8 +25,8 @@ function mutator.apply_mutation(mutation, source)
     return string.gsub(source, escape_pattern(mutation.original), mutation.replacement)
 end
 
-function mutator.apply_mutation_to_file(mutation, source_path, output_path)
-    local source = mutator.read_file(source_path)
+function mutator.apply_mutation_to_file(mutation, input_path, output_path)
+    local source = mutator.read_file(input_path)
     mutator.write_file(output_path, mutator.apply_mutation(mutation, source))
 end
 
