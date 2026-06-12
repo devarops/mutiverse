@@ -38,7 +38,7 @@ local function replace_globally(mutation, source)
     return source:gsub(escaped_original, mutation.replacement)
 end
 
-function mutator.has_mutations(plan)
+function mutator.has_mutations_key(plan)
     return plan.mutations ~= nil
 end
 
