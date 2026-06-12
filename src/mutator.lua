@@ -13,10 +13,6 @@ local function split_lines(text)
     return lines
 end
 
-local function join_lines(lines)
-    return table.concat(lines, "\n")
-end
-
 local function replace_in_line(mutation, target_line)
     local col_start, col_end = mutation.start_col + 1, mutation.end_col
     local existing_text = target_line:sub(col_start, col_end)
@@ -33,7 +29,7 @@ local function replace_at_location(mutation, source)
     if target_line then
         lines[target_line_index] = replace_in_line(mutation, target_line)
     end
-    return join_lines(lines)
+    return table.concat(lines, "\n")
 end
 
 local function replace_globally(mutation, source)
