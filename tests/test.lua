@@ -2,7 +2,7 @@ local file_io = require("file_io")
 local mutator = require("mutator")
 
 local function assert_contains(output, substring)
-    assert.truthy(output:find(substring))
+    assert.truthy(output:find(substring, 1, true))
 end
 
 local function build_mutator_test_command(command)
