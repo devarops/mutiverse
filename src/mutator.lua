@@ -48,11 +48,14 @@ local function has_location(mutation)
     return mutation.start_row ~= nil
 end
 
+local SURVIVED_MESSAGE = "👾 survived"
+local KILLED_MESSAGE = "🏹 killed"
+
 local function report_mutation_outcome(exit_code)
     if exit_code == 0 then
-        print("👾 survived")
+        print(SURVIVED_MESSAGE)
     else
-        print("🏹 killed")
+        print(KILLED_MESSAGE)
     end
 end
 
