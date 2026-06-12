@@ -69,8 +69,7 @@ function mutator.apply_mutation_to_file(mutation, input_path, output_path)
 end
 
 function mutator.is_mutation_killed(command)
-    local exit_code = os.execute(command)
-    return exit_code ~= 0
+    return os.execute(command) ~= 0
 end
 
 function mutator.run_test(command)
