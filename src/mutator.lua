@@ -8,7 +8,7 @@ end
 local function split_lines(text)
     local lines = {}
     for line in text:gmatch("[^\n]+") do
-        lines[#lines + 1] = line
+        table.insert(lines, line)
     end
     return lines
 end
