@@ -1,7 +1,7 @@
 local file_io = {}
 
 local function with_open(path, mode, func)
-    local file = io.open(path, mode)
+    local file = assert(io.open(path, mode), "could not open file: " .. path)
     local result = func(file)
     file:close()
     return result
