@@ -45,10 +45,6 @@ local function replace_all(mutation, source)
     return source:gsub(escaped_original, replacement)
 end
 
-local function has_location(mutation)
-    return mutation.start_row ~= nil
-end
-
 local SURVIVED_MESSAGE = "👾 survived"
 local KILLED_MESSAGE = "🏹 killed"
 
@@ -57,7 +53,7 @@ function mutator.has_mutations(plan)
 end
 
 function mutator.apply_mutation(mutation, source)
-    if has_location(mutation) then
+    if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
     end
     return replace_all(mutation, source)
