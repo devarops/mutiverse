@@ -11,7 +11,8 @@ local function escape_pattern(text)
 end
 
 function mutator.apply_mutation(mutation, source)
-    return source:gsub(escape_pattern(mutation.original), mutation.replacement)
+    local pattern = escape_pattern(mutation.original)
+    return source:gsub(pattern, mutation.replacement)
 end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
