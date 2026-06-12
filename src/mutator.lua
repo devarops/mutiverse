@@ -21,14 +21,10 @@ local function column_range(mutation)
     return mutation.start_col + 1, mutation.end_col
 end
 
-local function assert_original_matches_at_location(mutation, target_line)
+local function replace_in_line(mutation, target_line)
     local col_start, col_end = column_range(mutation)
     local existing_text = target_line:sub(col_start, col_end)
     assert(existing_text == mutation.original, "original text does not match at specified location")
-end
-
-local function replace_in_line(mutation, target_line)
-    local col_start, col_end = column_range(mutation)
     local prefix = target_line:sub(1, col_start - 1)
     local suffix = target_line:sub(col_end + 1)
     return prefix .. mutation.replacement .. suffix
@@ -39,7 +35,6 @@ local function replace_at_location(mutation, source)
     local target_line_index = mutation.start_row + 1
     local target_line = lines[target_line_index]
     if target_line then
-        assert_original_matches_at_location(mutation, target_line)
         lines[target_line_index] = replace_in_line(mutation, target_line)
     end
     return join_lines(lines)
