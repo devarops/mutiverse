@@ -16,16 +16,14 @@ end
 local function replace_in_line(mutation, line)
     local start_col = mutation.start_col
     local end_col = mutation.end_col
-    local original = mutation.original
-    local replacement = mutation.replacement
 
     local original_at_location = line:sub(start_col + 1, end_col)
-    if original_at_location ~= original then
+    if original_at_location ~= mutation.original then
         error("original text does not match at specified location")
     end
     local before = line:sub(1, start_col)
     local after = line:sub(end_col + 1)
-    return before .. replacement .. after
+    return before .. mutation.replacement .. after
 end
 
 local function replace_at_location(mutation, source)
