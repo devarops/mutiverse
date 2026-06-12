@@ -15,8 +15,9 @@ end
 
 local function replace_in_line(mutation, target_line)
     local start_pos = mutation.start_col + 1
+    local actual_text = target_line:sub(start_pos, mutation.end_col)
     assert(
-        target_line:sub(start_pos, mutation.end_col) == mutation.original,
+        actual_text == mutation.original,
         "original text does not match at specified location"
     )
     local prefix = target_line:sub(1, start_pos - 1)
