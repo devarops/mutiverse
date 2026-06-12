@@ -26,7 +26,7 @@ describe("apply_mutation", function()
     end)
 
     it("should report an error when original text does not match at the specified location", function()
-        local ok, err = pcall(mutator.apply_mutation, {start_row=0, start_col=0, end_col=1, original="z", replacement="x"}, "abc")
+        local ok = pcall(mutator.apply_mutation, {start_row=0, start_col=0, end_col=1, original="z", replacement="x"}, "abc")
         assert.is_falsy(ok)
     end)
 end)
