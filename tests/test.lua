@@ -6,7 +6,7 @@ local function remove_if_exists(path)
 end
 
 local function assert_contains(output, expected)
-    assert.is_true(output:find(expected) ~= nil)
+    assert.truthy(output:find(expected))
 end
 
 local function run_mutator_test(command)
