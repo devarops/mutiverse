@@ -24,9 +24,7 @@ end
 local function assert_original_matches_at_location(mutation, target_line)
     local col_start, col_end = column_range(mutation)
     local existing_text = target_line:sub(col_start, col_end)
-    if existing_text ~= mutation.original then
-        error("original text does not match at specified location")
-    end
+    assert(existing_text == mutation.original, "original text does not match at specified location")
 end
 
 local function replace_in_line(mutation, target_line)
