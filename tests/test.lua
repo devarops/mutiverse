@@ -5,13 +5,13 @@ local function remove_if_exists(path)
     if path then os.remove(path) end
 end
 
-describe("is_valid", function()
+describe("has_mutations", function()
     it("should accept a valid mutation plan with an empty mutation list", function()
-        assert.is_true(mutator.is_valid({mutations={}}))
+        assert.is_true(mutator.has_mutations({mutations={}}))
     end)
 
     it("should reject a plan missing the mutations field", function()
-        assert.is_falsy(mutator.is_valid({}))
+        assert.is_falsy(mutator.has_mutations({}))
     end)
 end)
 

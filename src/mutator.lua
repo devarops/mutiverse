@@ -29,7 +29,7 @@ local function replace_at_location(mutation, source)
     return table.concat(lines, "\n")
 end
 
-function mutator.is_valid(plan)
+function mutator.has_mutations(plan)
     return plan.mutations ~= nil
 end
 
