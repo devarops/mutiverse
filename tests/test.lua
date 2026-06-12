@@ -9,9 +9,9 @@ local LUA_BOOTSTRAP = [[lua -e "package.path = 'src/?.lua;' .. package.path; loc
 
 local function run_mutator_test(command)
     local process = io.popen(string.format(LUA_BOOTSTRAP, command))
-    local output = process:read("*a")
+    local content = process:read("*a")
     process:close()
-    return output
+    return content
 end
 
 describe("apply_mutation", function()
@@ -68,12 +68,12 @@ end)
 
 describe("run_test", function()
     it("should print 👾 survived when test command exits with 0", function()
-        local output = run_mutator_test("true")
-        assert_contains(output, mutator.SURVIVED_MESSAGE)
+        local content = run_mutator_test("true")
+        assert_contains(content, mutator.SURVIVED_MESSAGE)
     end)
 
     it("should print 🏹 killed when test command exits non-zero", function()
-        local output = run_mutator_test("false")
-        assert_contains(output, mutator.KILLED_MESSAGE)
+        local content = run_mutator_test("false")
+        assert_contains(content, mutator.KILLED_MESSAGE)
     end)
 end)
