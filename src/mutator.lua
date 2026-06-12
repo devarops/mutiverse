@@ -13,7 +13,7 @@ local function split_lines(text)
     return lines
 end
 
-local function replace_at_index(text, start_pos, end_pos, replacement)
+local function replace_at_range(text, start_pos, end_pos, replacement)
     local prefix = text:sub(1, start_pos - 1)
     local suffix = text:sub(end_pos + 1)
     return prefix .. replacement .. suffix
@@ -23,7 +23,7 @@ local function replace_in_line(mutation, target_line)
     local column_start, column_end = mutation.start_col + 1, mutation.end_col
     local text_at_range = target_line:sub(column_start, column_end)
     assert(text_at_range == mutation.original, "original text does not match at specified location")
-    return replace_at_index(target_line, column_start, column_end, mutation.replacement)
+    return replace_at_range(target_line, column_start, column_end, mutation.replacement)
 end
 
 local function replace_at_location(mutation, source)
