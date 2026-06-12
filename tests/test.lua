@@ -5,7 +5,7 @@ local function assert_contains(output, expected)
     assert.truthy(output:find(expected, 1, true))
 end
 
-local function build_mutator_test_command(command)
+local function format_test_command(command)
     return string.format(
         [[lua -e "package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('%s')"]],
         command
@@ -13,7 +13,7 @@ local function build_mutator_test_command(command)
 end
 
 local function run_mutator_test(command)
-    local process = io.popen(build_mutator_test_command(command))
+    local process = io.popen(format_test_command(command))
     local output = process:read("*a")
     process:close()
     return output
