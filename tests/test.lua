@@ -10,9 +10,9 @@ local function build_mutator_test_command(command)
 end
 
 local function run_mutator_test(command)
-    local handle = io.popen(build_mutator_test_command(command))
-    local output = handle:read("*a")
-    handle:close()
+    local process = io.popen(build_mutator_test_command(command))
+    local output = process:read("*a")
+    process:close()
     return output
 end
 
