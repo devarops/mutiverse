@@ -26,17 +26,22 @@ describe("apply_plan", function()
 end)
 
 describe("apply_mutation_to_file", function()
+    local input_path
+    local output_path
+
+    teardown(function()
+        if input_path then os.remove(input_path) end
+        if output_path then os.remove(output_path) end
+    end)
+
     it("should read source file, apply mutation, and write mutated content to output file", function()
-        local input_path = "/tmp/test_mutation_source.lua"
-        local output_path = "/tmp/test_mutation_output.lua"
+        input_path = "/tmp/test_mutation_source.lua"
+        output_path = "/tmp/test_mutation_output.lua"
         mutator.write_file(input_path, "return 1")
 
         mutator.apply_mutation_to_file({original="1", replacement="0"}, input_path, output_path)
 
         local result = mutator.read_file(output_path)
         assert.equals("return 0", result)
-
-        os.remove(input_path)
-        os.remove(output_path)
     end)
 end)
