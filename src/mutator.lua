@@ -5,6 +5,14 @@ local function escape_pattern(text)
     return text:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 end
 
+local function split_lines(text)
+    local lines = {}
+    for line in text:gmatch("[^\n]+") do
+        lines[#lines + 1] = line
+    end
+    return lines
+end
+
 local function replace_in_line(mutation, target_line)
     local actual_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
 
@@ -15,10 +23,7 @@ local function replace_in_line(mutation, target_line)
 end
 
 local function replace_at_location(mutation, source)
-    local lines = {}
-    for line in source:gmatch("[^\n]+") do
-        lines[#lines + 1] = line
-    end
+    local lines = split_lines(source)
     local target_line_index = mutation.start_row + 1
     local target_line = lines[target_line_index]
     if target_line then
