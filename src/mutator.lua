@@ -2,12 +2,12 @@ local file_io = require("file_io")
 
 local mutator = {}
 
-function mutator.is_valid(plan)
-    return plan.mutations ~= nil
-end
-
 local function escape_pattern(text)
     return text:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
+end
+
+function mutator.is_valid(plan)
+    return plan.mutations ~= nil
 end
 
 function mutator.apply_mutation(mutation, source)
