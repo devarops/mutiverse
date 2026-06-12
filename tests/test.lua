@@ -35,8 +35,8 @@ describe("apply_mutation_to_file", function()
     end)
 
     it("should read source file, apply mutation, and write mutated content to output file", function()
-        input_path = "/tmp/test_mutation_source.lua"
-        output_path = "/tmp/test_mutation_output.lua"
+        input_path = os.tmpname()
+        output_path = os.tmpname()
         mutator.write_file(input_path, "return 1")
 
         mutator.apply_mutation_to_file({original="1", replacement="0"}, input_path, output_path)
