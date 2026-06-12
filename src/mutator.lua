@@ -1,4 +1,4 @@
-local solution = {}
+local mutator = {}
 
 local function read_file(path)
     local f = io.open(path, "r")
@@ -13,7 +13,7 @@ local function write_file(path, content)
     f:close()
 end
 
-function solution.validate(plan)
+function mutator.validate(plan)
     return plan.mutations ~= nil
 end
 
@@ -21,22 +21,22 @@ local function escape_pattern(text)
     return text:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 end
 
-function solution.apply_mutation(mutation, source)
+function mutator.apply_mutation(mutation, source)
     return string.gsub(source, escape_pattern(mutation.original), mutation.replacement)
 end
 
-function solution.apply_mutation_to_file(mutation, source_path, output_path)
+function mutator.apply_mutation_to_file(mutation, source_path, output_path)
     local source = read_file(source_path)
-    local result = solution.apply_mutation(mutation, source)
+    local result = mutator.apply_mutation(mutation, source)
     write_file(output_path, result)
 end
 
-function solution.apply_plan(plan, source)
+function mutator.apply_plan(plan, source)
     local result = source
     for _, mutation in ipairs(plan.mutations) do
-        result = solution.apply_mutation(mutation, result)
+        result = mutator.apply_mutation(mutation, result)
     end
     return result
 end
 
-return solution
+return mutator
