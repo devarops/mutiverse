@@ -30,7 +30,8 @@ end
 
 local function replace_at_location(mutation, source)
     local lines = split_lines(source)
-    local line_index = mutation.start_row + 1
+    local start_row = mutation.start_row
+    local line_index = start_row + 1
     local line = lines[line_index]
     if line then
         lines[line_index] = replace_in_line(mutation, line)
