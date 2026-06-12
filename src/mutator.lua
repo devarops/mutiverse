@@ -1,17 +1,6 @@
+local file_io = require("file_io")
+
 local mutator = {}
-
-function mutator.read_file(path)
-    local file = io.open(path, "r")
-    local content = file:read("*a")
-    file:close()
-    return content
-end
-
-function mutator.write_file(path, content)
-    local file = io.open(path, "w")
-    file:write(content)
-    file:close()
-end
 
 function mutator.is_valid(plan)
     return plan.mutations ~= nil
@@ -26,9 +15,9 @@ function mutator.apply_mutation(mutation, source)
 end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
-    local source = mutator.read_file(input_path)
+    local source = file_io.read(input_path)
     local mutated_source = mutator.apply_mutation(mutation, source)
-    mutator.write_file(output_path, mutated_source)
+    file_io.write(output_path, mutated_source)
 end
 
 function mutator.apply_plan(plan, source)

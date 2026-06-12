@@ -1,3 +1,4 @@
+local file_io = require("file_io")
 local mutator = require("mutator")
 
 describe("is_valid", function()
@@ -37,11 +38,11 @@ describe("apply_mutation_to_file", function()
     it("should read source file, apply mutation, and write mutated content to output file", function()
         input_path = os.tmpname()
         output_path = os.tmpname()
-        mutator.write_file(input_path, "return 1")
+        file_io.write(input_path, "return 1")
 
         mutator.apply_mutation_to_file({original="1", replacement="0"}, input_path, output_path)
 
-        local result = mutator.read_file(output_path)
+        local result = file_io.read(output_path)
         assert.equals("return 0", result)
     end)
 end)
