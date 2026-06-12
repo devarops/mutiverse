@@ -13,6 +13,10 @@ local function split_lines(text)
     return lines
 end
 
+local function join_lines(lines)
+    return table.concat(lines, "\n")
+end
+
 local function assert_text_matches(mutation, target_line)
     local existing_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
     if existing_text ~= mutation.original then
@@ -39,7 +43,7 @@ local function replace_at_location(mutation, source)
     if target_line then
         lines[target_line_index] = replace_in_line(mutation, target_line)
     end
-    return table.concat(lines, "\n")
+    return join_lines(lines)
 end
 
 local function replace_globally(mutation, source)
