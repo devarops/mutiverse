@@ -60,7 +60,7 @@ function mutator.run_test(command)
     if exit_code == 0 then
         print("👾 survived")
     else
-        print("🗡 killed")
+        print("🏹 killed")
     end
     return exit_code ~= 0
 end
