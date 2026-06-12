@@ -29,6 +29,11 @@ local function replace_at_location(mutation, source)
     return table.concat(lines, "\n")
 end
 
+local function replace_globally(mutation, source)
+    local pattern = escape_pattern(mutation.original)
+    return source:gsub(pattern, mutation.replacement)
+end
+
 function mutator.has_mutations(plan)
     return plan.mutations ~= nil
 end
@@ -37,8 +42,7 @@ function mutator.apply_mutation(mutation, source)
     if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
     end
-    local pattern = escape_pattern(mutation.original)
-    return source:gsub(pattern, mutation.replacement)
+    return replace_globally(mutation, source)
 end
 
 function mutator.apply_plan(plan, source)
