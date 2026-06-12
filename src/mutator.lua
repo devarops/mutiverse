@@ -25,6 +25,10 @@ local function replace_in_line(mutation, target_line)
     return prefix .. mutation.replacement .. suffix
 end
 
+local function has_position(mutation)
+    return mutation.start_row ~= nil
+end
+
 local function replace_at_location(mutation, source)
     local lines = split_lines(source)
     local target_line_index = mutation.start_row + 1
@@ -43,7 +47,7 @@ function mutator.has_mutations(plan)
 end
 
 function mutator.apply_mutation(mutation, source)
-    if mutation.start_row ~= nil then
+    if has_position(mutation) then
         return replace_at_location(mutation, source)
     end
     return source:gsub(escape_pattern(mutation.original), mutation.replacement)
