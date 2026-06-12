@@ -14,9 +14,7 @@ local function split_lines(text)
 end
 
 local function replace_at_range(text, start_pos, end_pos, replacement)
-    local prefix = text:sub(1, start_pos - 1)
-    local suffix = text:sub(end_pos + 1)
-    return prefix .. replacement .. suffix
+    return text:sub(1, start_pos - 1) .. replacement .. text:sub(end_pos + 1)
 end
 
 local function replace_in_line(mutation, target_line)
