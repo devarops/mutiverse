@@ -39,6 +39,10 @@ local function replace_at_location(mutation, source)
     return table.concat(lines, "\n")
 end
 
+local function replace_globally(mutation, source)
+    return source:gsub(escape_pattern(mutation.original), mutation.replacement)
+end
+
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
 
@@ -50,7 +54,7 @@ function mutator.apply_mutation(mutation, source)
     if has_position(mutation) then
         return replace_at_location(mutation, source)
     end
-    return source:gsub(escape_pattern(mutation.original), mutation.replacement)
+    return replace_globally(mutation, source)
 end
 
 function mutator.apply_plan(plan, source)
