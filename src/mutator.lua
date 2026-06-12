@@ -4,26 +4,29 @@ local function escape_pattern(text)
     return text:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 end
 
+local function replace_at_location(mutation, source)
+    local lines = {}
+    for line in source:gmatch("[^\n]+") do
+        lines[#lines + 1] = line
+    end
+    local line = lines[mutation.start_row + 1]
+    if line then
+        local before = line:sub(1, mutation.start_col)
+        local after = line:sub(mutation.end_col + 1)
+        lines[mutation.start_row + 1] = before .. mutation.replacement .. after
+    end
+    return table.concat(lines, "\n")
+end
+
 function mutator.is_valid(plan)
     return plan.mutations ~= nil
 end
 
 function mutator.apply_mutation(mutation, source)
-    local pattern = escape_pattern(mutation.original)
     if mutation.start_row ~= nil then
-        -- Location-aware replacement: replace only at the specified row/col
-        local lines = {}
-        for line in source:gmatch("[^\n]+") do
-            lines[#lines + 1] = line
-        end
-        local line = lines[mutation.start_row + 1]
-        if line then
-            local before = line:sub(1, mutation.start_col)
-            local after = line:sub(mutation.end_col + 1)
-            lines[mutation.start_row + 1] = before .. mutation.replacement .. after
-        end
-        return table.concat(lines, "\n")
+        return replace_at_location(mutation, source)
     end
+    local pattern = escape_pattern(mutation.original)
     return source:gsub(pattern, mutation.replacement)
 end
 
