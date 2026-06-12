@@ -28,8 +28,8 @@ local function replace_at_location(mutation, source)
     return table.concat(lines, "\n")
 end
 
-local SURVIVED_MESSAGE = "👾 survived"
-local KILLED_MESSAGE = "🏹 killed"
+mutator.SURVIVED_MESSAGE = "👾 survived"
+mutator.KILLED_MESSAGE = "🏹 killed"
 
 function mutator.has_mutations(plan)
     return plan.mutations ~= nil
@@ -60,9 +60,9 @@ end
 function mutator.run_test(command)
     local exit_code = os.execute(command)
     if exit_code == 0 then
-        print(SURVIVED_MESSAGE)
+        print(mutator.SURVIVED_MESSAGE)
     else
-        print(KILLED_MESSAGE)
+        print(mutator.KILLED_MESSAGE)
     end
     return exit_code ~= 0
 end
