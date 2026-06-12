@@ -38,12 +38,16 @@ local function replace_globally(mutation, source)
     return source:gsub(escaped_original, mutation.replacement)
 end
 
+local function has_location(mutation)
+    return mutation.start_row ~= nil
+end
+
 function mutator.has_mutations_key(plan)
     return plan.mutations ~= nil
 end
 
 function mutator.apply_mutation(mutation, source)
-    if mutation.start_row ~= nil then
+    if has_location(mutation) then
         return replace_at_location(mutation, source)
     end
     return replace_globally(mutation, source)
