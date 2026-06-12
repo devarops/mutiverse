@@ -19,10 +19,10 @@ local function replace_at_location(mutation, source)
     for line in source:gmatch("[^\n]+") do
         lines[#lines + 1] = line
     end
-    local line_index = mutation.start_row + 1
-    local target_line = lines[line_index]
+    local target_line_index = mutation.start_row + 1
+    local target_line = lines[target_line_index]
     if target_line then
-        lines[line_index] = replace_in_line(mutation, target_line)
+        lines[target_line_index] = replace_in_line(mutation, target_line)
     end
     return table.concat(lines, "\n")
 end
