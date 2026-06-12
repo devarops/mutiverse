@@ -1,5 +1,18 @@
 local solution = {}
 
+local function read_file(path)
+    local f = io.open(path, "r")
+    local content = f:read("*a")
+    f:close()
+    return content
+end
+
+local function write_file(path, content)
+    local f = io.open(path, "w")
+    f:write(content)
+    f:close()
+end
+
 function solution.validate(plan)
     return plan.mutations ~= nil
 end
@@ -13,15 +26,9 @@ function solution.apply_mutation(mutation, source)
 end
 
 function solution.apply_mutation_to_file(mutation, source_path, output_path)
-    local f = io.open(source_path, "r")
-    local source = f:read("*a")
-    f:close()
-
+    local source = read_file(source_path)
     local result = solution.apply_mutation(mutation, source)
-
-    f = io.open(output_path, "w")
-    f:write(result)
-    f:close()
+    write_file(output_path, result)
 end
 
 function solution.apply_plan(plan, source)
