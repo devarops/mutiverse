@@ -61,12 +61,13 @@ end
 
 function mutator.run_test(command)
     local exit_code = os.execute(command)
-    if exit_code == 0 then
+    local success = exit_code == 0
+    if success then
         print("👾 survived")
     else
         print("🏹 killed")
     end
-    return exit_code ~= 0
+    return not success
 end
 
 return mutator
