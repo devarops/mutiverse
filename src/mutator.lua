@@ -14,11 +14,11 @@ local function split_lines(text)
 end
 
 local function replace_in_line(mutation, target_line)
-    local col_start, col_end = mutation.start_col + 1, mutation.end_col
-    local existing_text = target_line:sub(col_start, col_end)
+    local column_start, column_end = mutation.start_col + 1, mutation.end_col
+    local existing_text = target_line:sub(column_start, column_end)
     assert(existing_text == mutation.original, "original text does not match at specified location")
-    local prefix = target_line:sub(1, col_start - 1)
-    local suffix = target_line:sub(col_end + 1)
+    local prefix = target_line:sub(1, column_start - 1)
+    local suffix = target_line:sub(column_end + 1)
     return prefix .. mutation.replacement .. suffix
 end
 
