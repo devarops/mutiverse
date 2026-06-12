@@ -17,16 +17,22 @@ local function join_lines(lines)
     return table.concat(lines, "\n")
 end
 
+local function column_range(mutation)
+    return mutation.start_col + 1, mutation.end_col
+end
+
 local function assert_original_matches_at_location(mutation, target_line)
-    local existing_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
+    local col_start, col_end = column_range(mutation)
+    local existing_text = target_line:sub(col_start, col_end)
     if existing_text ~= mutation.original then
         error("original text does not match at specified location")
     end
 end
 
 local function replace_in_line(mutation, target_line)
-    local prefix = target_line:sub(1, mutation.start_col)
-    local suffix = target_line:sub(mutation.end_col + 1)
+    local col_start, col_end = column_range(mutation)
+    local prefix = target_line:sub(1, col_start - 1)
+    local suffix = target_line:sub(col_end + 1)
     return prefix .. mutation.replacement .. suffix
 end
 
