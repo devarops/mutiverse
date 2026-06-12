@@ -9,8 +9,12 @@ local function assert_contains(output, expected)
     assert.truthy(output:find(expected))
 end
 
+local function build_mutator_test_command(command)
+    return "lua -e \"package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('" .. command .. "')\""
+end
+
 local function run_mutator_test(command)
-    local handle = io.popen("lua -e \"package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('" .. command .. "')\"")
+    local handle = io.popen(build_mutator_test_command(command))
     local output = handle:read("*a")
     handle:close()
     return output
