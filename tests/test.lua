@@ -1,8 +1,8 @@
 local file_io = require("file_io")
 local mutator = require("mutator")
 
-local function assert_contains(output, expected)
-    assert.truthy(output:find(expected, 1, true))
+local function assert_contains(content, expected)
+    assert.truthy(content:find(expected, 1, true))
 end
 
 local LUA_BOOTSTRAP = [[lua -e "package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('%s')"]]
