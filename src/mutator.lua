@@ -5,13 +5,13 @@ local function escape_pattern(text)
     return text:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 end
 
-local function replace_in_line(mutation, line)
-    local actual_text = line:sub(mutation.start_col + 1, mutation.end_col)
+local function replace_in_line(mutation, target_line)
+    local actual_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
 
     if actual_text ~= mutation.original then
         error("original text does not match at specified location")
     end
-    return line:sub(1, mutation.start_col) .. mutation.replacement .. line:sub(mutation.end_col + 1)
+    return target_line:sub(1, mutation.start_col) .. mutation.replacement .. target_line:sub(mutation.end_col + 1)
 end
 
 local function replace_at_location(mutation, source)
