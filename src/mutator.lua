@@ -41,7 +41,7 @@ local KILLED_MESSAGE = "🏹 killed"
 mutator.SURVIVED_MESSAGE = SURVIVED_MESSAGE
 mutator.KILLED_MESSAGE = KILLED_MESSAGE
 
-function mutator.has_mutations_field(plan)
+function mutator.has_mutations(plan)
     return plan.mutations ~= nil
 end
 
