@@ -15,4 +15,10 @@ describe("Apply mutation", function()
         local result = solution.apply_mutation({original="1", replacement="0"}, "return 1")
         assert.equals("return 0", result)
     end)
+
+    it("should apply all mutations from a plan to source text", function()
+        local plan = {mutations={{original="1", replacement="0"}, {original="2", replacement="3"}}}
+        local result = solution.apply_plan(plan, "1+2")
+        assert.equals("0+3", result)
+    end)
 end)
