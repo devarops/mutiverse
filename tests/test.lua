@@ -77,7 +77,7 @@ end)
 
 describe("run_test", function()
     it("should return false when test command exits with 0", function()
-        assert.is_false(mutator.run_test("echo hello"))
+        assert.is_false(mutator.is_mutation_killed("echo hello"))
     end)
 
     it("should print 👾 survived when test command exits with 0", function()

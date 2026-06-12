@@ -70,14 +70,17 @@ function mutator.apply_mutation_to_file(mutation, input_path, output_path)
     file_io.write(output_path, result)
 end
 
-function mutator.run_test(command)
+function mutator.is_mutation_killed(command)
     local exit_code = os.execute(command)
-    if exit_code ~= 0 then
+    return exit_code ~= 0
+end
+
+function mutator.run_test(command)
+    if mutator.is_mutation_killed(command) then
         print(KILLED_MESSAGE)
     else
         print(SURVIVED_MESSAGE)
     end
-    return exit_code ~= 0
 end
 
 return mutator
