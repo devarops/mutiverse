@@ -16,13 +16,13 @@ end
 
 describe("apply_mutation", function()
     it("should replace original text with replacement text", function()
-        local result = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
-        assert.equals("return 0", result)
+        local mutated_content = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
+        assert.equals("return 0", mutated_content)
     end)
 
     it("should replace only at the specified row/col when location fields are provided", function()
-        local result = mutator.apply_mutation({start_row=0, start_col=4, end_col=5, original="1", replacement="0"}, "x = 1\ny = 1")
-        assert.equals("x = 0\ny = 1", result)
+        local mutated_content = mutator.apply_mutation({start_row=0, start_col=4, end_col=5, original="1", replacement="0"}, "x = 1\ny = 1")
+        assert.equals("x = 0\ny = 1", mutated_content)
     end)
 
     it("should report an error when original text does not match at the specified location", function()
@@ -34,8 +34,8 @@ end)
 describe("apply_plan", function()
     it("should apply all mutations from a plan to source text", function()
         local plan = {mutations={{original="1", replacement="0"}, {original="2", replacement="3"}}}
-        local result = mutator.apply_plan(plan, "1+2")
-        assert.equals("0+3", result)
+        local mutated_content = mutator.apply_plan(plan, "1+2")
+        assert.equals("0+3", mutated_content)
     end)
 end)
 
@@ -55,8 +55,8 @@ describe("apply_mutation_to_file", function()
 
         mutator.apply_mutation_to_file({original="1", replacement="0"}, input_path, output_path)
 
-        local result = file_io.read(output_path)
-        assert.equals("return 0", result)
+        local mutated_content = file_io.read(output_path)
+        assert.equals("return 0", mutated_content)
     end)
 end)
 
