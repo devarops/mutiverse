@@ -52,6 +52,9 @@ end
 
 function mutator.run_test(command)
     local success = os.execute(command)
+    if success then
+        print("👾 survived")
+    end
     return not success
 end
 
