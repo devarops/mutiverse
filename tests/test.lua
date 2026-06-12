@@ -20,6 +20,11 @@ describe("apply_mutation", function()
         local result = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
         assert.equals("return 0", result)
     end)
+
+    it("should replace only at the specified row/col when location fields are provided", function()
+        local result = mutator.apply_mutation({start_row=0, end_row=0, start_col=4, end_col=5, original="1", replacement="0"}, "x = 1\ny = 1")
+        assert.equals("x = 0\ny = 1", result)
+    end)
 end)
 
 describe("apply_plan", function()
