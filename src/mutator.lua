@@ -81,13 +81,12 @@ end
 
 function mutator.run_test(command)
     local exit_code = os.execute(command)
-    local is_killed = exit_code ~= 0
-    if is_killed then
+    if exit_code ~= 0 then
         print(KILLED_MESSAGE)
     else
         print(SURVIVED_MESSAGE)
     end
-    return is_killed
+    return exit_code ~= 0
 end
 
 return mutator
