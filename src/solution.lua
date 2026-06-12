@@ -1,7 +1,7 @@
-local kata = {}
+local validator = {}
 
-function kata.validate(plan)
+function validator.validate(plan)
     return plan.mutations ~= nil
 end
 
-return kata
+return validator
