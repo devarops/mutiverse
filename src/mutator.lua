@@ -47,6 +47,14 @@ local function has_location(mutation)
     return mutation.start_row ~= nil
 end
 
+local function report_mutation_outcome(exit_code)
+    if exit_code == 0 then
+        print("👾 survived")
+    else
+        print("🏹 killed")
+    end
+end
+
 function mutator.has_mutations_key(plan)
     return plan.mutations ~= nil
 end
@@ -74,11 +82,7 @@ end
 
 function mutator.run_test(command)
     local exit_code = os.execute(command)
-    if exit_code == 0 then
-        print("👾 survived")
-    else
-        print("🏹 killed")
-    end
+    report_mutation_outcome(exit_code)
     return exit_code ~= 0
 end
 
