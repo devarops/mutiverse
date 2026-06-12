@@ -14,9 +14,9 @@ local function split_lines(text)
 end
 
 local function replace_in_line(mutation, target_line)
-    local actual_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
+    local existing_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
 
-    if actual_text ~= mutation.original then
+    if existing_text ~= mutation.original then
         error("original text does not match at specified location")
     end
     return target_line:sub(1, mutation.start_col) .. mutation.replacement .. target_line:sub(mutation.end_col + 1)
