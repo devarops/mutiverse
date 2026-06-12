@@ -6,7 +6,10 @@ local function assert_contains(output, substring)
 end
 
 local function build_mutator_test_command(command)
-    return "lua -e \"package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('" .. command .. "')\""
+    return string.format(
+        [[lua -e "package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('%s')"]],
+        command
+    )
 end
 
 local function run_mutator_test(command)
