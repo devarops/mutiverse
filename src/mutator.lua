@@ -38,8 +38,7 @@ function mutator.apply_mutation(mutation, source)
     if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
     end
-    local escaped_original = escape_pattern(mutation.original)
-    return source:gsub(escaped_original, mutation.replacement)
+    return source:gsub(escape_pattern(mutation.original), mutation.replacement)
 end
 
 function mutator.apply_plan(plan, source)
