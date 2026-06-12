@@ -19,7 +19,10 @@ local function replace_in_line(mutation, target_line)
     if existing_text ~= mutation.original then
         error("original text does not match at specified location")
     end
-    return target_line:sub(1, mutation.start_col) .. mutation.replacement .. target_line:sub(mutation.end_col + 1)
+
+    local prefix = target_line:sub(1, mutation.start_col)
+    local suffix = target_line:sub(mutation.end_col + 1)
+    return prefix .. mutation.replacement .. suffix
 end
 
 local function replace_at_location(mutation, source)
