@@ -21,8 +21,7 @@ end
 
 local function replace_in_line(mutation, target_line)
     local start_pos, end_pos = mutation.start_col + 1, mutation.end_col
-    local text_at_range = target_line:sub(start_pos, end_pos)
-    assert(text_at_range == mutation.original, "original text does not match at specified location")
+    assert(target_line:sub(start_pos, end_pos) == mutation.original, "original text does not match at specified location")
     return replace_at_range(target_line, start_pos, end_pos, mutation.replacement)
 end
 
