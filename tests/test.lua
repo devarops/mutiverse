@@ -1,10 +1,6 @@
 local file_io = require("file_io")
 local mutator = require("mutator")
 
-local function remove_if_exists(path)
-    if path then os.remove(path) end
-end
-
 local function assert_contains(output, expected)
     assert.truthy(output:find(expected))
 end
@@ -60,8 +56,8 @@ describe("apply_mutation_to_file", function()
     local output_path
 
     teardown(function()
-        remove_if_exists(input_path)
-        remove_if_exists(output_path)
+        if input_path then os.remove(input_path) end
+        if output_path then os.remove(output_path) end
     end)
 
     it("should read source file, apply mutation, and write mutated content to output file", function()
