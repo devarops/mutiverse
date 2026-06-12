@@ -36,15 +36,11 @@ local function replace_globally(mutation, source)
     return source:gsub(escape_pattern(mutation.original), mutation.replacement)
 end
 
-local function has_location(mutation)
-    return mutation.start_row ~= nil
-end
-
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
 
 function mutator.apply_mutation(mutation, source)
-    if has_location(mutation) then
+    if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
     end
     return replace_globally(mutation, source)
