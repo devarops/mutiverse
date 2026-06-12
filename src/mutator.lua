@@ -39,10 +39,8 @@ local function replace_at_location(mutation, source)
 end
 
 local function replace_all(mutation, source)
-    local original = mutation.original
-    local replacement = mutation.replacement
-    local escaped_original = escape_pattern(original)
-    return source:gsub(escaped_original, replacement)
+    local escaped_original = escape_pattern(mutation.original)
+    return source:gsub(escaped_original, mutation.replacement)
 end
 
 local SURVIVED_MESSAGE = "👾 survived"
