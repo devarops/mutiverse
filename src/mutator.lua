@@ -14,12 +14,12 @@ local function split_lines(text)
 end
 
 local function replace_in_line(mutation, target_line)
-    local start_pos, end_pos = mutation.start_col + 1, mutation.end_col
+    local start_pos = mutation.start_col + 1
     assert(
-        target_line:sub(start_pos, end_pos) == mutation.original,
+        target_line:sub(start_pos, mutation.end_col) == mutation.original,
         "original text does not match at specified location"
     )
-    return target_line:sub(1, start_pos - 1) .. mutation.replacement .. target_line:sub(end_pos + 1)
+    return target_line:sub(1, start_pos - 1) .. mutation.replacement .. target_line:sub(mutation.end_col + 1)
 end
 
 local function replace_at_location(mutation, source)
