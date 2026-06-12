@@ -16,13 +16,13 @@ local function run_mutator_test(command)
     return output
 end
 
-describe("has_mutations_key", function()
+describe("has_mutations", function()
     it("should accept a plan with the mutations key even when the list is empty", function()
-        assert.is_true(mutator.has_mutations_key({mutations={}}))
+        assert.is_true(mutator.has_mutations({mutations={}}))
     end)
 
     it("should reject a plan missing the mutations key", function()
-        assert.is_falsy(mutator.has_mutations_key({}))
+        assert.is_falsy(mutator.has_mutations({}))
     end)
 end)
 

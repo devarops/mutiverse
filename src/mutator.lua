@@ -61,7 +61,7 @@ local function report_mutation_outcome(exit_code)
     end
 end
 
-function mutator.has_mutations_key(plan)
+function mutator.has_mutations(plan)
     return plan.mutations ~= nil
 end
 
