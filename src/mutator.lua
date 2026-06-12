@@ -13,7 +13,7 @@ function mutator.write_file(path, content)
     f:close()
 end
 
-function mutator.validate(plan)
+function mutator.is_valid(plan)
     return plan.mutations ~= nil
 end
 

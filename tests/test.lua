@@ -2,11 +2,11 @@ local mutator = require("mutator")
 
 describe("Validate mutation plan", function()
     it("should accept a valid mutation plan with an empty mutation list", function()
-        assert.is_true(mutator.validate({mutations={}}))
+        assert.is_true(mutator.is_valid({mutations={}}))
     end)
 
     it("should reject a plan missing the mutations field", function()
-        assert.is_falsy(mutator.validate({}))
+        assert.is_falsy(mutator.is_valid({}))
     end)
 end)
 
