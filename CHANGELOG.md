@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.1.0] - 2026-06-12
+
 ### Added
 
 - `mutator.apply_mutation(mutation, source)` — apply a single mutation to source text
@@ -19,3 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error reporting when `original` does not match text at the specified mutation location
 - Validation function `mutator.has_mutations(plan)` to check plan structure
 - `file_io.read(path)` and `file_io.write(path, content)` — file read/write helpers
+
+[Unreleased]: https://github.com/devarops/mutiverse/compare/v0.1.0...HEAD
+[v0.1.0]: https://github.com/devarops/mutiverse/releases/tag/v0.1.0
