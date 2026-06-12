@@ -34,8 +34,8 @@ local function replace_at_location(mutation, source)
 end
 
 local function replace_globally(mutation, source)
-    local pattern = escape_pattern(mutation.original)
-    return source:gsub(pattern, mutation.replacement)
+    local escaped_original = escape_pattern(mutation.original)
+    return source:gsub(escaped_original, mutation.replacement)
 end
 
 function mutator.has_mutations(plan)
