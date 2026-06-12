@@ -36,10 +36,8 @@ local function replace_globally(mutation, source)
     return source:gsub(escape_pattern(mutation.original), mutation.replacement)
 end
 
-local SURVIVED_MESSAGE = "👾 survived"
-local KILLED_MESSAGE = "🏹 killed"
-mutator.SURVIVED_MESSAGE = SURVIVED_MESSAGE
-mutator.KILLED_MESSAGE = KILLED_MESSAGE
+mutator.SURVIVED_MESSAGE = "👾 survived"
+mutator.KILLED_MESSAGE = "🏹 killed"
 
 function mutator.has_mutations(plan)
     return plan.mutations ~= nil
@@ -73,9 +71,9 @@ end
 
 function mutator.run_test(command)
     if mutator.is_mutation_killed(command) then
-        print(KILLED_MESSAGE)
+        print(mutator.KILLED_MESSAGE)
     else
-        print(SURVIVED_MESSAGE)
+        print(mutator.SURVIVED_MESSAGE)
     end
 end
 
