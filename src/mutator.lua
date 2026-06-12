@@ -50,4 +50,9 @@ function mutator.apply_mutation_to_file(mutation, input_path, output_path)
     file_io.write(output_path, result)
 end
 
+function mutator.run_test(command)
+    local success = os.execute(command)
+    return not success
+end
+
 return mutator
