@@ -22,7 +22,7 @@ local function escape_pattern(text)
 end
 
 function mutator.apply_mutation(mutation, source)
-    return string.gsub(source, escape_pattern(mutation.original), mutation.replacement)
+    return source:gsub(escape_pattern(mutation.original), mutation.replacement)
 end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
