@@ -64,8 +64,8 @@ end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
     local source = file_io.read(input_path)
-    local result = mutator.apply_mutation(mutation, source)
-    file_io.write(output_path, result)
+    local mutated_content = mutator.apply_mutation(mutation, source)
+    file_io.write(output_path, mutated_content)
 end
 
 function mutator.is_mutation_killed(command)
