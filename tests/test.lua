@@ -1,6 +1,6 @@
 local mutator = require("mutator")
 
-describe("Validate mutation plan", function()
+describe("is_valid", function()
     it("should accept a valid mutation plan with an empty mutation list", function()
         assert.is_true(mutator.is_valid({mutations={}}))
     end)
@@ -10,12 +10,14 @@ describe("Validate mutation plan", function()
     end)
 end)
 
-describe("Apply mutation", function()
+describe("apply_mutation", function()
     it("should replace original text with replacement text", function()
         local result = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
         assert.equals("return 0", result)
     end)
+end)
 
+describe("apply_plan", function()
     it("should apply all mutations from a plan to source text", function()
         local plan = {mutations={{original="1", replacement="0"}, {original="2", replacement="3"}}}
         local result = mutator.apply_plan(plan, "1+2")
@@ -23,7 +25,7 @@ describe("Apply mutation", function()
     end)
 end)
 
-describe("Apply mutation to file", function()
+describe("apply_mutation_to_file", function()
     it("should read source file, apply mutation, and write mutated content to output file", function()
         local input_path = "/tmp/test_mutation_source.lua"
         local output_path = "/tmp/test_mutation_output.lua"
