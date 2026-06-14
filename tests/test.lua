@@ -85,6 +85,10 @@ describe("run_test", function()
     it("should return false when test command exits with 0", function()
         assert.is_false(mutator.run_test("true"))
     end)
+
+    it("should return true when test command exits non-zero", function()
+        assert.is_true(mutator.run_test("false"))
+    end)
 end)
 
 describe("validate_plan", function()
