@@ -82,4 +82,9 @@ function mutator.run_test(command)
     end
 end
 
+function mutator.validate_plan_file(file_path)
+    local command = "jsonschema -i " .. file_path .. " /workdir/schemas/mutation-plan.schema.json"
+    return os.execute(command) == 0
+end
+
 return mutator
