@@ -30,9 +30,10 @@ end
 
 local function replace_at_location(mutation, source)
     local lines = split_lines(source)
-    local target_line = lines[mutation.start_row + 1]
+    local line_index = mutation.start_row + 1
+    local target_line = lines[line_index]
     if target_line then
-        lines[mutation.start_row + 1] = replace_in_line(mutation, target_line)
+        lines[line_index] = replace_in_line(mutation, target_line)
     end
     return table.concat(lines, "\n")
 end
