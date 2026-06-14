@@ -81,6 +81,10 @@ describe("run_test", function()
         local content = run_mutator_test("false")
         assert_contains(content, mutator.KILLED_MESSAGE)
     end)
+
+    it("should return false when test command exits with 0", function()
+        assert.is_false(mutator.run_test("true"))
+    end)
 end)
 
 describe("validate_plan", function()
