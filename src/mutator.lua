@@ -42,6 +42,7 @@ end
 
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
+local RECORD_SEPARATOR = "---END---"
 local MUTATION_SCHEMA_PATH = "/workdir/schemas/mutation-plan.schema.json"
 
 function mutator.validate_plan(plan)
@@ -100,7 +101,7 @@ for m in data["mutations"]:
     print(m["original"])
     print(m["replacement"])
     print(m["operator"])
-    print("---END---")
+    print("]] .. RECORD_SEPARATOR .. [[")
 ]]
 end
 
@@ -124,7 +125,7 @@ local function parse_json_mutations(plan_path)
     local mutation = {}
     local field_count = 0
     for line in handle:lines() do
-        if line == "---END---" then
+        if line == RECORD_SEPARATOR then
             table.insert(results, mutation)
             mutation = {}
             field_count = 0
