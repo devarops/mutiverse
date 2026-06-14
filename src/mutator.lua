@@ -44,6 +44,7 @@ end
 
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
+local MUTATION_SCHEMA_PATH = "/workdir/schemas/mutation-plan.schema.json"
 
 function mutator.validate_plan(plan)
     return plan.mutations ~= nil
@@ -83,7 +84,7 @@ function mutator.run_test(command)
 end
 
 function mutator.validate_plan_file(file_path)
-    local command = "jsonschema -i " .. file_path .. " /workdir/schemas/mutation-plan.schema.json"
+    local command = "jsonschema -i " .. file_path .. " " .. MUTATION_SCHEMA_PATH
     return os.execute(command) == 0
 end
 
