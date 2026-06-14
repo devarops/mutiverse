@@ -29,6 +29,11 @@ describe("apply_mutation", function()
         local ok = pcall(mutator.apply_mutation, {start_row=0, start_col=0, end_col=1, original="z", replacement="x"}, "abc")
         assert.is_falsy(ok)
     end)
+
+    it("should report an error when start_row is beyond the file", function()
+        local ok = pcall(mutator.apply_mutation, {start_row=10, start_col=0, end_col=1, original="a", replacement="z"}, "abc")
+        assert.is_falsy(ok)
+    end)
 end)
 
 describe("apply_plan", function()
