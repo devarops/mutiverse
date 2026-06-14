@@ -143,13 +143,7 @@ function mutator.apply_mutations_from_plan(plan_path)
     local results = {}
     for _, m in ipairs(mutations) do
         local source = file_io.read(m.file_path)
-        local result = mutator.apply_mutation({
-            start_row = m.start_row,
-            start_col = m.start_col,
-            end_col = m.end_col,
-            original = m.original,
-            replacement = m.replacement
-        }, source)
+        local result = mutator.apply_mutation(m, source)
         table.insert(results, result)
     end
     return results
