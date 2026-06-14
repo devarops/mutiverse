@@ -79,6 +79,7 @@ function mutator.run_test(command)
         print(mutator.KILLED_MESSAGE)
     else
         print(mutator.SURVIVED_MESSAGE)
+        return false
     end
 end
 
