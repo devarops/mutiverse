@@ -83,4 +83,9 @@ describe("validate_plan", function()
         local plan = {mutations={}}
         assert.is_true(mutator.validate_plan(plan))
     end)
+
+    it("should return false for a plan missing required mutations field", function()
+        local plan = {}
+        assert.is_false(mutator.validate_plan(plan))
+    end)
 end)
