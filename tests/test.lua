@@ -77,3 +77,10 @@ describe("run_test", function()
         assert_contains(content, mutator.KILLED_MESSAGE)
     end)
 end)
+
+describe("validate_plan", function()
+    it("should return true for a valid mutation plan", function()
+        local plan = {mutations={}}
+        assert.is_true(mutator.validate_plan(plan))
+    end)
+end)
