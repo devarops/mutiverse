@@ -76,6 +76,7 @@ end
 function mutator.run_test(command)
     if mutator.is_mutation_killed(command) then
         print(mutator.KILLED_MESSAGE)
+        return true
     else
         print(mutator.SURVIVED_MESSAGE)
         return false
