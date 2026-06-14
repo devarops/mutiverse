@@ -88,9 +88,8 @@ function mutator.validate_plan_file(file_path)
     return os.execute(command) == 0
 end
 
-local function parse_json_mutations(plan_path)
-    local tmp = os.tmpname() .. ".py"
-    local script = [[import json, sys
+local function mutation_extraction_script()
+    return [[import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
 for m in data["mutations"]:
@@ -103,6 +102,11 @@ for m in data["mutations"]:
     print(m["operator"])
     print("---END---")
 ]]
+end
+
+local function parse_json_mutations(plan_path)
+    local tmp = os.tmpname() .. ".py"
+    local script = mutation_extraction_script()
     local f = assert(io.open(tmp, "w"))
     f:write(script)
     f:close()
