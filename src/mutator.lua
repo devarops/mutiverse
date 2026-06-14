@@ -32,9 +32,8 @@ local function replace_at_location(mutation, source)
     local lines = split_lines(source)
     local line_index = mutation.start_row + 1
     local target_line = lines[line_index]
-    if target_line then
-        lines[line_index] = replace_in_line(mutation, target_line)
-    end
+    assert(target_line, "start_row is beyond the file")
+    lines[line_index] = replace_in_line(mutation, target_line)
     return table.concat(lines, "\n")
 end
 
