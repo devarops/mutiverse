@@ -140,7 +140,7 @@ local function parse_json_mutations(plan_path)
         end
     end
     handle:close()
-    os.execute("rm " .. tmp)
+    os.remove(tmp)
     return results
 end
 
