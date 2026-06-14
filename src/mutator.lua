@@ -88,4 +88,72 @@ function mutator.validate_plan_file(file_path)
     return os.execute(command) == 0
 end
 
+local function parse_json_mutations(plan_path)
+    local tmp = os.tmpname() .. ".py"
+    local script = [[import json, sys
+with open(sys.argv[1]) as f:
+    data = json.load(f)
+for m in data["mutations"]:
+    print(m["file_path"])
+    print(m["start_row"])
+    print(m["start_col"])
+    print(m["end_col"])
+    print(m["original"])
+    print(m["replacement"])
+    print(m["operator"])
+    print("---END---")
+]]
+    local f = assert(io.open(tmp, "w"))
+    f:write(script)
+    f:close()
+    local handle = io.popen("python3 " .. tmp .. " " .. plan_path)
+    local results = {}
+    local mutation = {}
+    local field_count = 0
+    for line in handle:lines() do
+        if line == "---END---" then
+            table.insert(results, mutation)
+            mutation = {}
+            field_count = 0
+        else
+            field_count = field_count + 1
+            if field_count == 1 then
+                mutation.file_path = line
+            elseif field_count == 2 then
+                mutation.start_row = tonumber(line)
+            elseif field_count == 3 then
+                mutation.start_col = tonumber(line)
+            elseif field_count == 4 then
+                mutation.end_col = tonumber(line)
+            elseif field_count == 5 then
+                mutation.original = line
+            elseif field_count == 6 then
+                mutation.replacement = line
+            elseif field_count == 7 then
+                mutation.operator = line
+            end
+        end
+    end
+    handle:close()
+    os.execute("rm " .. tmp)
+    return results
+end
+
+function mutator.apply_mutations_from_plan(plan_path)
+    local mutations = parse_json_mutations(plan_path)
+    local results = {}
+    for _, m in ipairs(mutations) do
+        local source = file_io.read(m.file_path)
+        local result = mutator.apply_mutation({
+            start_row = m.start_row,
+            start_col = m.start_col,
+            end_col = m.end_col,
+            original = m.original,
+            replacement = m.replacement
+        }, source)
+        table.insert(results, result)
+    end
+    return results
+end
+
 return mutator
