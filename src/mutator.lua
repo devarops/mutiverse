@@ -46,6 +46,9 @@ mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
 
 function mutator.validate_plan(plan)
+    if not plan.mutations then
+        return false
+    end
     return true
 end
 
