@@ -108,6 +108,15 @@ for m in data["mutations"]:
     f:close()
     local handle = io.popen("python3 " .. tmp .. " " .. plan_path)
     local results = {}
+    local field_specs = {
+        {name = "file_path"},
+        {name = "start_row", convert = tonumber},
+        {name = "start_col", convert = tonumber},
+        {name = "end_col", convert = tonumber},
+        {name = "original"},
+        {name = "replacement"},
+        {name = "operator"},
+    }
     local mutation = {}
     local field_count = 0
     for line in handle:lines() do
@@ -117,21 +126,12 @@ for m in data["mutations"]:
             field_count = 0
         else
             field_count = field_count + 1
-            if field_count == 1 then
-                mutation.file_path = line
-            elseif field_count == 2 then
-                mutation.start_row = tonumber(line)
-            elseif field_count == 3 then
-                mutation.start_col = tonumber(line)
-            elseif field_count == 4 then
-                mutation.end_col = tonumber(line)
-            elseif field_count == 5 then
-                mutation.original = line
-            elseif field_count == 6 then
-                mutation.replacement = line
-            elseif field_count == 7 then
-                mutation.operator = line
+            local spec = field_specs[field_count]
+            local value = line
+            if spec.convert then
+                value = spec.convert(value)
             end
+            mutation[spec.name] = value
         end
     end
     handle:close()
