@@ -44,6 +44,10 @@ end
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
 
+function mutator.validate_plan(plan)
+    return true
+end
+
 function mutator.apply_mutation(mutation, source)
     if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
