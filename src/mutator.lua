@@ -14,9 +14,8 @@ local function split_lines(text)
 end
 
 local function assert_text_matches(mutation, target_line)
-    local actual_text = target_line:sub(mutation.start_col + 1, mutation.end_col)
     assert(
-        actual_text == mutation.original,
+        target_line:sub(mutation.start_col + 1, mutation.end_col) == mutation.original,
         "original text does not match at specified location"
     )
 end
