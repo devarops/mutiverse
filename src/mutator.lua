@@ -96,12 +96,11 @@ local function build_report_entry(mutation, killed)
     return entry
 end
 
-function mutator.apply_plan(plan, source, test_command, source_path, report_path)
+function mutator.apply_plan(plan, original_source, test_command, source_path, report_path)
     local results = {}
     local report_entries = {}
-    local original_source = source
     for _, mutation in ipairs(plan.mutations) do
-        local result = (mutator.apply_mutation(mutation, source))
+        local result = mutator.apply_mutation(mutation, original_source)
         table.insert(results, result)
         if source_path then
             file_io.write(source_path, result)
