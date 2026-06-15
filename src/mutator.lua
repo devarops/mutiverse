@@ -70,17 +70,19 @@ local function escape_json(s)
     return '"' .. s:gsub('["\\]', function(c) return '\\' .. c end) .. '"'
 end
 
+local function encode_json_value(v)
+    if type(v) == "boolean" then
+        return tostring(v)
+    end
+    return escape_json(v)
+end
+
 local function encode_report(report_entries)
     local parts = {}
     for _, entry in ipairs(report_entries) do
         local fields = {}
         for k, v in pairs(entry) do
-            local key_value = escape_json(k) .. ":"
-            if type(v) == "boolean" then
-                table.insert(fields, key_value .. tostring(v))
-            else
-                table.insert(fields, key_value .. escape_json(v))
-            end
+            table.insert(fields, escape_json(k) .. ":" .. encode_json_value(v))
         end
         table.insert(parts, "{" .. table.concat(fields, ",") .. "}")
     end
