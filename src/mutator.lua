@@ -87,6 +87,15 @@ local function encode_report(report_entries)
     return "[" .. table.concat(parts, ",") .. "]"
 end
 
+local function build_report_entry(mutation, killed)
+    local entry = {}
+    for k, v in pairs(mutation) do
+        entry[k] = v
+    end
+    entry.killed = killed
+    return entry
+end
+
 function mutator.apply_plan(plan, source, test_command, source_path, report_path)
     local results = {}
     local report_entries = {}
@@ -101,12 +110,7 @@ function mutator.apply_plan(plan, source, test_command, source_path, report_path
         if test_command then
             killed = mutator.run_test(test_command)
         end
-        local entry = {}
-        for k, v in pairs(mutation) do
-            entry[k] = v
-        end
-        entry.killed = killed
-        table.insert(report_entries, entry)
+        table.insert(report_entries, build_report_entry(mutation, killed))
     end
     if source_path and not test_command then
         file_io.write(source_path, original_source)
