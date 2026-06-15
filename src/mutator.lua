@@ -146,8 +146,8 @@ function mutator.run_test(command)
     return killed
 end
 
-function mutator.validate_plan_file(file_path)
-    local command = "jsonschema -i " .. file_path .. " " .. MUTATION_SCHEMA_PATH
+function mutator.validate_plan_file(plan_path)
+    local command = "jsonschema -i " .. plan_path .. " " .. MUTATION_SCHEMA_PATH
     return os.execute(command) == 0
 end
 
