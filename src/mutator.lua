@@ -55,7 +55,7 @@ local FIELD_SPECS = {
     {name = "operator"},
 }
 
-function mutator.validate_plan(plan)
+function mutator.plan_has_mutations(plan)
     return plan.mutations ~= nil
 end
 

@@ -186,15 +186,15 @@ describe("run_test", function()
     end)
 end)
 
-describe("validate_plan", function()
-    it("should return true for a valid mutation plan", function()
+describe("plan_has_mutations", function()
+    it("should return true for a mutation plan with a mutations field", function()
         local plan = {mutations={}}
-        assert.is_true(mutator.validate_plan(plan))
+        assert.is_true(mutator.plan_has_mutations(plan))
     end)
 
-    it("should return false for a plan missing required mutations field", function()
+    it("should return false for a plan missing the mutations field", function()
         local plan = {}
-        assert.is_false(mutator.validate_plan(plan))
+        assert.is_false(mutator.plan_has_mutations(plan))
     end)
 end)
 
