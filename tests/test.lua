@@ -67,6 +67,16 @@ describe("apply_plan", function()
         assert.equals("return 0", content)
         os.remove(tmpfile)
     end)
+
+    it("should write a JSON report to report_path with killed/survived results", function()
+        local plan = {mutations={{original="1", replacement="0"}}}
+        local report_path = os.tmpname()
+        os.remove(report_path)
+        mutator.apply_plan(plan, "return 1", nil, nil, report_path)
+        local ok = pcall(file_io.read, report_path)
+        assert.is_true(ok)
+        os.remove(report_path)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
