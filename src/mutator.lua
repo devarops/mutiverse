@@ -102,7 +102,7 @@ local function build_report_entry(mutation, killed)
     return entry
 end
 
-local function revert_source_in_repository(source_path)
+local function restore_source_via_git(source_path)
     local dir = source_path:match("^(.+)/[^/]+$")
     if dir then
         os.execute("cd " .. dir .. " && git stash 2>/dev/null >/dev/null && git checkout master -q 2>/dev/null")
@@ -119,7 +119,7 @@ local function apply_single_mutation(mutation, original_source, test_command, so
         killed = mutator.run_test(test_command)
     end
     if source_path then
-        revert_source_in_repository(source_path)
+        restore_source_via_git(source_path)
     end
     return result, build_report_entry(mutation, killed)
 end
