@@ -66,10 +66,14 @@ function mutator.apply_mutation(mutation, source)
     return replace_globally(mutation, source)
 end
 
-function mutator.apply_plan(plan, source)
+function mutator.apply_plan(plan, source, test_command)
     local results = {}
     for _, mutation in ipairs(plan.mutations) do
-        table.insert(results, (mutator.apply_mutation(mutation, source)))
+        local result = (mutator.apply_mutation(mutation, source))
+        table.insert(results, result)
+        if test_command then
+            mutator.run_test(test_command)
+        end
     end
     return results
 end
