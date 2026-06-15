@@ -104,6 +104,10 @@ function mutator.apply_plan(plan, original_source, test_command, source_path, re
         table.insert(results, result)
         if source_path then
             file_io.write(source_path, result)
+            local dir = source_path:match("^(.+)/[^/]+$")
+            if dir then
+                os.execute("cd " .. dir .. " && git stash 2>/dev/null >/dev/null && git checkout master -q 2>/dev/null")
+            end
         end
         local killed = false
         if test_command then
