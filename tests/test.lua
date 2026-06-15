@@ -97,6 +97,25 @@ describe("apply_plan", function()
         assert.equals("return 1", content)
         os.remove(tmpfile)
     end)
+
+    it("should revert source file between each mutation using git checkout", function()
+        local tmpdir = os.tmpname()
+        os.remove(tmpdir)
+        os.execute("mkdir -p " .. tmpdir)
+        local source_path = tmpdir .. "/source.lua"
+        file_io.write(source_path, "return 1")
+        os.execute(string.format(
+            "cd %s && git init -q && git config user.email x@x.com && git config user.name x && git add source.lua && git commit -q -m init",
+            tmpdir))
+        local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
+        mutator.apply_plan(plan, "return 1", nil, source_path)
+        local handle = io.popen(string.format("cd %s && git reflog --oneline", tmpdir))
+        local reflog = handle:read("*a")
+        handle:close()
+        local _, count = reflog:gsub("checkout", "")
+        assert.is_true(count >= 1)
+        os.execute("rm -rf " .. tmpdir)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
