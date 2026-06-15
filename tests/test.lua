@@ -8,9 +8,9 @@ end
 local LUA_BOOTSTRAP = [[lua -e "package.path = 'src/?.lua;' .. package.path; local mutator = require('mutator'); mutator.run_test('%s')"]]
 
 local function run_mutator_test(command)
-    local process = io.popen(string.format(LUA_BOOTSTRAP, command))
-    local content = process:read("*a")
-    process:close()
+    local handle = io.popen(string.format(LUA_BOOTSTRAP, command))
+    local content = handle:read("*a")
+    handle:close()
     return content
 end
 
