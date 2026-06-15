@@ -116,6 +116,25 @@ describe("apply_plan", function()
         assert.is_true(count >= 1)
         os.execute("rm -rf " .. tmpdir)
     end)
+
+    it("should apply mutation to source file in a git repo before test command runs", function()
+        local tmpdir = os.tmpname()
+        os.remove(tmpdir)
+        os.execute("mkdir -p " .. tmpdir)
+        local source_path = tmpdir .. "/source.lua"
+        file_io.write(source_path, "return 1")
+        os.execute(string.format(
+            "cd %s && git init -q && git config user.email x@x.com && git config user.name x && git add source.lua && git commit -q -m init",
+            tmpdir))
+        local checker_path = tmpdir .. "/checker.lua"
+        file_io.write(checker_path, 'local f=io.open("' .. source_path .. '");local c=f:read("*a");f:close();os.exit(c:match("0") and 1 or 0)')
+        local lua_code = string.format(
+            [[local m = require('mutator'); m.apply_plan({mutations={{original='1', replacement='0'}}}, 'return 1', 'lua %s', '%s')]],
+            checker_path, source_path)
+        local content = run_lua(lua_code)
+        assert_contains(content, mutator.KILLED_MESSAGE)
+        os.execute("rm -rf " .. tmpdir)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
