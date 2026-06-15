@@ -39,8 +39,10 @@ end)
 describe("apply_plan", function()
     it("should apply all mutations from a plan to source text", function()
         local plan = {mutations={{original="1", replacement="0"}, {original="2", replacement="3"}}}
-        local mutated_content = mutator.apply_plan(plan, "1+2")
-        assert.equals("0+3", mutated_content)
+        local results = mutator.apply_plan(plan, "1+2")
+        assert.equals(2, #results)
+        assert.equals("0+2", results[1])
+        assert.equals("1+3", results[2])
     end)
 
     it("should apply each mutation individually to the original source", function()

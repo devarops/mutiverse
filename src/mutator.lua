@@ -57,11 +57,11 @@ function mutator.apply_mutation(mutation, source)
 end
 
 function mutator.apply_plan(plan, source)
-    local mutated_content = source
+    local results = {}
     for _, mutation in ipairs(plan.mutations) do
-        mutated_content = mutator.apply_mutation(mutation, mutated_content)
+        table.insert(results, (mutator.apply_mutation(mutation, source)))
     end
-    return mutated_content
+    return results
 end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
