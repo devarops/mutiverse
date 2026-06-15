@@ -74,6 +74,10 @@
             "LOGICAL_NEGATION"
           ],
           "description": "Mutation operator identifier"
+        },
+        "killed": {
+          "type": "boolean",
+          "description": "Set by the orchestrator after running the test suite: true if the mutant was killed, false if it survived. Not present in a plug-in generated plan."
         }
       }
     }

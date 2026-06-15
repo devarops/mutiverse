@@ -1,0 +1,66 @@
+{
+  "project": "mutiverse",
+  "description": "Implement a language-agnostic mutation testing framework using TDD.",
+  "tasks": [
+    {
+      "id": "01",
+      "title": "Validate mutation plan against schema",
+      "description": "We create a Lua function that runs jsonschema.",
+      "acceptance_criteria": [
+        "Use jsonschema to validate tests/data/mutation-plan.json against schemas/mutation-plan.schema.json.",
+        "A valid mutation-plan.json passes validation (exit 0).",
+        "An invalid mutation-plan.json (e.g., missing required field) fails validation with a non-zero exit."
+      ],
+      "gold": "done",
+      "passes": true
+    },
+    {
+      "id": "02",
+      "title": "Apply a single mutation to a source file",
+      "description": "Implement a Lua function that reads a source file, applies one mutation from the mutation plan (replacing original text with replacement text at the specified location), and writes the result to a temporary file.",
+      "acceptance_criteria": [
+        "Applying a CONSTANT_NUMERIC_FLIP mutation replaces the target text in the source file.",
+        "The original source file remains unchanged after mutation."
+      ],
+      "gold": "done",
+      "passes": true
+    },
+    {
+      "id": "03",
+      "title": "Respect mutation location fields (start_row, end_row, start_col, end_col)",
+      "description": "When the same original text appears multiple times — the mutation should only be applied at the exact location indicated by start_row, end_row, start_col, end_col.",
+      "acceptance_criteria": [
+        "A mutation whose original text appears multiple times in the source file is only applied at the specified row/col location, not at other occurrences.",
+        "A mutation whose original text does NOT match the text at the specified row/col location reports an error (the mismatch indicates the mutation candidate is stale or the source has changed).",
+        "The replacement text is inserted at the correct column boundary within the specified row, replacing exactly the range [start_col, end_col)."
+      ],
+      "gold": "done",
+      "passes": true
+    },
+    {
+      "id": "04",
+      "title": "Run a test command and report mutant outcome",
+      "description": "A Lua function that executes a test command, prints whether the mutant survived or was killed, and returns a boolean.",
+      "acceptance_criteria": [
+        "When the test command exits with 0 (all tests pass), the function prints 👾 survived and returns false.",
+        "When the test command exits non-zero (at least one test fails), the function prints 🏹 killed and returns true."
+      ],
+      "gold": "done",
+      "passes": true
+    },
+    {
+      "id": "05",
+      "title": "Orchestrate the mutation testing loop",
+      "description": "apply_plan is the orchestrator. It reads a mutation plan from a JSON file, applies each mutation one at a time to the original source file (in place), runs the test command after each, prints per-mutation outcome, and writes a final JSON report with killed/survived results.",
+      "acceptance_criteria": [
+        "Given a mutation plan JSON file and a test command, apply_plan applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
+        "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations via git checkout.",
+        "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": true|false field per entry.",
+        "The report file is valid JSON matching the mutation record structure except for the added killed field.",
+        "After apply_plan completes, the source files are restored to their original state."
+      ],
+      "gold": "current",
+      "passes": false
+    }
+  ]
+}
