@@ -75,10 +75,11 @@ local function encode_report(report_entries)
     for _, entry in ipairs(report_entries) do
         local fields = {}
         for k, v in pairs(entry) do
+            local key_value = escape_json(k) .. ":"
             if type(v) == "boolean" then
-                table.insert(fields, escape_json(k) .. ":" .. tostring(v))
+                table.insert(fields, key_value .. tostring(v))
             else
-                table.insert(fields, escape_json(k) .. ":" .. escape_json(v))
+                table.insert(fields, key_value .. escape_json(v))
             end
         end
         table.insert(parts, "{" .. table.concat(fields, ",") .. "}")
