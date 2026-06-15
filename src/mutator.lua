@@ -122,14 +122,13 @@ local function parse_mutation_records(line_iterator)
     for line in line_iterator do
         if line == RECORD_SEPARATOR then
             table.insert(results, mutation)
+            mutation = nil
             field_index = 0
         else
-            if field_index == 0 then
+            if not mutation then
                 mutation = {}
-                field_index = 1
-            else
-                field_index = field_index + 1
             end
+            field_index = field_index + 1
             local spec = FIELD_SPECS[field_index]
             mutation[spec.name] = spec.convert and spec.convert(line) or line
         end
