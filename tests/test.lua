@@ -5,7 +5,7 @@ local function assert_contains(content, expected)
     assert.truthy(content:find(expected, 1, true))
 end
 
-local LUA_BOOTSTRAP = [[lua -e "package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.run_test('%s')"]]
+local LUA_BOOTSTRAP = [[lua -e "package.path = 'src/?.lua;' .. package.path; local mutator = require('mutator'); mutator.run_test('%s')"]]
 
 local function run_mutator_test(command)
     local process = io.popen(string.format(LUA_BOOTSTRAP, command))
