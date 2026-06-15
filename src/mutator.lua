@@ -105,13 +105,7 @@ for m in data["mutations"]:
 ]]
 end
 
-local function parse_json_mutations(plan_path)
-    local tmp = os.tmpname() .. ".py"
-    local script = mutation_extraction_script()
-    local f = assert(io.open(tmp, "w"))
-    f:write(script)
-    f:close()
-    local handle = io.popen("python3 " .. tmp .. " " .. plan_path)
+local function parse_mutation_records(line_iterator)
     local results = {}
     local field_specs = {
         {name = "file_path"},
@@ -124,7 +118,7 @@ local function parse_json_mutations(plan_path)
     }
     local mutation = {}
     local field_count = 0
-    for line in handle:lines() do
+    for line in line_iterator do
         if line == RECORD_SEPARATOR then
             table.insert(results, mutation)
             mutation = {}
@@ -139,6 +133,17 @@ local function parse_json_mutations(plan_path)
             mutation[spec.name] = value
         end
     end
+    return results
+end
+
+local function parse_json_mutations(plan_path)
+    local tmp = os.tmpname() .. ".py"
+    local script = mutation_extraction_script()
+    local f = assert(io.open(tmp, "w"))
+    f:write(script)
+    f:close()
+    local handle = io.popen("python3 " .. tmp .. " " .. plan_path)
+    local results = parse_mutation_records(handle:lines())
     handle:close()
     os.remove(tmp)
     return results
