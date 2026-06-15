@@ -57,6 +57,16 @@ describe("apply_plan", function()
         handle:close()
         assert_contains(content, mutator.SURVIVED_MESSAGE)
     end)
+
+    it("should mutate source file in place when source_path is provided", function()
+        local tmpfile = os.tmpname()
+        file_io.write(tmpfile, "return 1")
+        local plan = {mutations={{original="1", replacement="0"}}}
+        mutator.apply_plan(plan, "return 1", "true", tmpfile)
+        local content = file_io.read(tmpfile)
+        assert.equals("return 0", content)
+        os.remove(tmpfile)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
