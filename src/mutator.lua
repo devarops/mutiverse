@@ -77,14 +77,18 @@ local function encode_json_value(v)
     return escape_json(v)
 end
 
+local function encode_report_entry(entry)
+    local fields = {}
+    for k, v in pairs(entry) do
+        table.insert(fields, escape_json(k) .. ":" .. encode_json_value(v))
+    end
+    return "{" .. table.concat(fields, ",") .. "}"
+end
+
 local function encode_report(report_entries)
     local parts = {}
     for _, entry in ipairs(report_entries) do
-        local fields = {}
-        for k, v in pairs(entry) do
-            table.insert(fields, escape_json(k) .. ":" .. encode_json_value(v))
-        end
-        table.insert(parts, "{" .. table.concat(fields, ",") .. "}")
+        table.insert(parts, encode_report_entry(entry))
     end
     return "[" .. table.concat(parts, ",") .. "]"
 end
