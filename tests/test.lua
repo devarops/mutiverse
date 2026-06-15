@@ -77,6 +77,16 @@ describe("apply_plan", function()
         assert.is_true(ok)
         os.remove(report_path)
     end)
+
+    it("should restore source file to original state after completing all mutations", function()
+        local tmpfile = os.tmpname()
+        file_io.write(tmpfile, "return 1")
+        local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
+        mutator.apply_plan(plan, "return 1", nil, tmpfile)
+        local content = file_io.read(tmpfile)
+        assert.equals("return 1", content)
+        os.remove(tmpfile)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
