@@ -112,7 +112,7 @@ function mutator.apply_plan(plan, source, test_command, source_path, report_path
         end
         table.insert(report_entries, build_report_entry(mutation, killed))
     end
-    if source_path and not test_command then
+    if source_path then
         file_io.write(source_path, original_source)
     end
     if report_path then
