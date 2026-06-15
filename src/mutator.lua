@@ -135,9 +135,7 @@ end
 local function parse_json_mutations(plan_path)
     local tmp = os.tmpname() .. ".py"
     local script = mutation_extraction_script()
-    local f = assert(io.open(tmp, "w"))
-    f:write(script)
-    f:close()
+    file_io.write(tmp, script)
     local handle = io.popen("python3 " .. tmp .. " " .. plan_path)
     local results = parse_mutation_records(handle:lines())
     handle:close()
