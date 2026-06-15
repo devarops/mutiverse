@@ -66,17 +66,48 @@ function mutator.apply_mutation(mutation, source)
     return replace_globally(mutation, source)
 end
 
-function mutator.apply_plan(plan, source, test_command, source_path)
+local function escape_json(s)
+    return '"' .. s:gsub('["\\]', function(c) return '\\' .. c end) .. '"'
+end
+
+local function encode_report(report_entries)
+    local parts = {}
+    for _, entry in ipairs(report_entries) do
+        local fields = {}
+        for k, v in pairs(entry) do
+            if type(v) == "boolean" then
+                table.insert(fields, escape_json(k) .. ":" .. tostring(v))
+            else
+                table.insert(fields, escape_json(k) .. ":" .. escape_json(v))
+            end
+        end
+        table.insert(parts, "{" .. table.concat(fields, ",") .. "}")
+    end
+    return "[" .. table.concat(parts, ",") .. "]"
+end
+
+function mutator.apply_plan(plan, source, test_command, source_path, report_path)
     local results = {}
+    local report_entries = {}
     for _, mutation in ipairs(plan.mutations) do
         local result = (mutator.apply_mutation(mutation, source))
         table.insert(results, result)
         if source_path then
             file_io.write(source_path, result)
         end
+        local killed = false
         if test_command then
-            mutator.run_test(test_command)
+            killed = mutator.run_test(test_command)
         end
+        local entry = {}
+        for k, v in pairs(mutation) do
+            entry[k] = v
+        end
+        entry.killed = killed
+        table.insert(report_entries, entry)
+    end
+    if report_path then
+        file_io.write(report_path, encode_report(report_entries))
     end
     return results
 end
