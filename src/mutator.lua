@@ -45,6 +45,16 @@ mutator.KILLED_MESSAGE = "🏹 killed"
 local RECORD_SEPARATOR = "---END---"
 local MUTATION_SCHEMA_PATH = "/workdir/schemas/mutation-plan.schema.json"
 
+local FIELD_SPECS = {
+    {name = "file_path"},
+    {name = "start_row", convert = tonumber},
+    {name = "start_col", convert = tonumber},
+    {name = "end_col", convert = tonumber},
+    {name = "original"},
+    {name = "replacement"},
+    {name = "operator"},
+}
+
 function mutator.validate_plan(plan)
     return plan.mutations ~= nil
 end
@@ -103,25 +113,20 @@ end
 
 local function parse_mutation_records(line_iterator)
     local results = {}
-    local field_specs = {
-        {name = "file_path"},
-        {name = "start_row", convert = tonumber},
-        {name = "start_col", convert = tonumber},
-        {name = "end_col", convert = tonumber},
-        {name = "original"},
-        {name = "replacement"},
-        {name = "operator"},
-    }
-    local mutation = {}
-    local field_count = 0
+    local mutation
+    local field_index = 0
     for line in line_iterator do
         if line == RECORD_SEPARATOR then
             table.insert(results, mutation)
-            mutation = {}
-            field_count = 0
+            field_index = 0
         else
-            field_count = field_count + 1
-            local spec = field_specs[field_count]
+            if field_index == 0 then
+                mutation = {}
+                field_index = 1
+            else
+                field_index = field_index + 1
+            end
+            local spec = FIELD_SPECS[field_index]
             mutation[spec.name] = spec.convert and spec.convert(line) or line
         end
     end
