@@ -5,13 +5,15 @@ local function assert_contains(content, expected)
     assert.truthy(content:find(expected, 1, true))
 end
 
-local LUA_BOOTSTRAP = [[lua -e "package.path = 'src/?.lua;' .. package.path; local mutator = require('mutator'); mutator.run_test('%s')"]]
-
-local function run_mutator_test(command)
-    local handle = io.popen(string.format(LUA_BOOTSTRAP, command))
+local function run_lua(lua_code)
+    local handle = io.popen([[lua -e "package.path = 'src/?.lua;' .. package.path; ]] .. lua_code .. [["]])
     local content = handle:read("*a")
     handle:close()
     return content
+end
+
+local function run_mutator_test(command)
+    return run_lua(string.format([[local mutator = require('mutator'); mutator.run_test('%s')]], command))
 end
 
 describe("apply_mutation", function()
@@ -52,9 +54,7 @@ describe("apply_plan", function()
     end)
 
     it("should run the test command for each mutation and print the outcome", function()
-        local handle = io.popen([[lua -e "package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.apply_plan({mutations={{original='1', replacement='2'}}}, 'return 1', 'true')"]])
-        local content = handle:read("*a")
-        handle:close()
+        local content = run_lua([[local m = require('mutator'); m.apply_plan({mutations={{original='1', replacement='2'}}}, 'return 1', 'true')]])
         assert_contains(content, mutator.SURVIVED_MESSAGE)
     end)
 
