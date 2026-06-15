@@ -70,11 +70,11 @@ local function escape_json(s)
     return '"' .. s:gsub('["\\]', function(c) return '\\' .. c end) .. '"'
 end
 
-local function encode_json_value(v)
-    if type(v) == "boolean" then
-        return tostring(v)
+local function encode_json_value(value)
+    if type(value) == "boolean" then
+        return tostring(value)
     end
-    return escape_json(v)
+    return escape_json(value)
 end
 
 local function encode_report_entry(entry)
