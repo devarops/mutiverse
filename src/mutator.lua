@@ -111,11 +111,13 @@ function mutator.apply_plan(plan, original_source, test_command, source_path, re
         table.insert(results, result)
         if source_path then
             file_io.write(source_path, result)
-            revert_source_in_repository(source_path)
         end
         local killed = false
         if test_command then
             killed = mutator.run_test(test_command)
+        end
+        if source_path then
+            revert_source_in_repository(source_path)
         end
         table.insert(report_entries, build_report_entry(mutation, killed))
     end
