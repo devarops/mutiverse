@@ -122,11 +122,7 @@ local function parse_mutation_records(line_iterator)
         else
             field_count = field_count + 1
             local spec = field_specs[field_count]
-            local value = line
-            if spec.convert then
-                value = spec.convert(value)
-            end
-            mutation[spec.name] = value
+            mutation[spec.name] = spec.convert and spec.convert(line) or line
         end
     end
     return results
