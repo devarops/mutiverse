@@ -50,6 +50,13 @@ describe("apply_plan", function()
         local results = mutator.apply_plan(plan, "1")
         assert.equals(2, #results)
     end)
+
+    it("should run the test command for each mutation and print the outcome", function()
+        local handle = io.popen([[lua -e "package.path = 'src/?.lua;' .. package.path; local m = require('mutator'); m.apply_plan({mutations={{original='1', replacement='2'}}}, 'return 1', 'true')"]])
+        local content = handle:read("*a")
+        handle:close()
+        assert_contains(content, mutator.SURVIVED_MESSAGE)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
