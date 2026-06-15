@@ -103,23 +103,28 @@ local function revert_source_in_repository(source_path)
     end
 end
 
+local function apply_single_mutation(mutation, original_source, test_command, source_path)
+    local result = mutator.apply_mutation(mutation, original_source)
+    if source_path then
+        file_io.write(source_path, result)
+    end
+    local killed = false
+    if test_command then
+        killed = mutator.run_test(test_command)
+    end
+    if source_path then
+        revert_source_in_repository(source_path)
+    end
+    return result, build_report_entry(mutation, killed)
+end
+
 function mutator.apply_plan(plan, original_source, test_command, source_path, report_path)
     local results = {}
     local report_entries = {}
     for _, mutation in ipairs(plan.mutations) do
-        local result = mutator.apply_mutation(mutation, original_source)
+        local result, report_entry = apply_single_mutation(mutation, original_source, test_command, source_path)
         table.insert(results, result)
-        if source_path then
-            file_io.write(source_path, result)
-        end
-        local killed = false
-        if test_command then
-            killed = mutator.run_test(test_command)
-        end
-        if source_path then
-            revert_source_in_repository(source_path)
-        end
-        table.insert(report_entries, build_report_entry(mutation, killed))
+        table.insert(report_entries, report_entry)
     end
     if source_path then
         file_io.write(source_path, original_source)
