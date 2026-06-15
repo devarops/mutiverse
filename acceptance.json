@@ -59,8 +59,8 @@
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
         "After apply_plan completes, the source files are restored to their original state."
       ],
-      "gold": "current",
-      "passes": false
+      "gold": "done",
+      "passes": true
     }
   ]
 }
