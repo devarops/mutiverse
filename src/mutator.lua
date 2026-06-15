@@ -90,6 +90,7 @@ end
 function mutator.apply_plan(plan, source, test_command, source_path, report_path)
     local results = {}
     local report_entries = {}
+    local original_source = source
     for _, mutation in ipairs(plan.mutations) do
         local result = (mutator.apply_mutation(mutation, source))
         table.insert(results, result)
@@ -106,6 +107,9 @@ function mutator.apply_plan(plan, source, test_command, source_path, report_path
         end
         entry.killed = killed
         table.insert(report_entries, entry)
+    end
+    if source_path and not test_command then
+        file_io.write(source_path, original_source)
     end
     if report_path then
         file_io.write(report_path, encode_report(report_entries))
