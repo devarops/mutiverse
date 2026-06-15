@@ -16,6 +16,22 @@ local function run_mutator_test(command)
     return run_lua(string.format([[local mutator = require('mutator'); mutator.run_test('%s')]], command))
 end
 
+local function create_git_repo_with_source()
+    local tmpdir = os.tmpname()
+    os.remove(tmpdir)
+    os.execute("mkdir -p " .. tmpdir)
+    local source_path = tmpdir .. "/source.lua"
+    file_io.write(source_path, "return 1")
+    os.execute(string.format(
+        "cd %s && git init -q && git config user.email x@x.com && git config user.name x && git add source.lua && git commit -q -m init",
+        tmpdir))
+    return tmpdir, source_path
+end
+
+local function cleanup_git_repo(tmpdir)
+    os.execute("rm -rf " .. tmpdir)
+end
+
 describe("apply_mutation", function()
     it("should replace original text with replacement text", function()
         local mutated_content = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
@@ -99,14 +115,7 @@ describe("apply_plan", function()
     end)
 
     it("should revert source file between each mutation using git checkout", function()
-        local tmpdir = os.tmpname()
-        os.remove(tmpdir)
-        os.execute("mkdir -p " .. tmpdir)
-        local source_path = tmpdir .. "/source.lua"
-        file_io.write(source_path, "return 1")
-        os.execute(string.format(
-            "cd %s && git init -q && git config user.email x@x.com && git config user.name x && git add source.lua && git commit -q -m init",
-            tmpdir))
+        local tmpdir, source_path = create_git_repo_with_source()
         local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
         mutator.apply_plan(plan, "return 1", nil, source_path)
         local handle = io.popen(string.format("cd %s && git reflog --oneline", tmpdir))
@@ -114,18 +123,11 @@ describe("apply_plan", function()
         handle:close()
         local _, count = reflog:gsub("checkout", "")
         assert.is_true(count >= 1)
-        os.execute("rm -rf " .. tmpdir)
+        cleanup_git_repo(tmpdir)
     end)
 
     it("should apply mutation to source file in a git repo before test command runs", function()
-        local tmpdir = os.tmpname()
-        os.remove(tmpdir)
-        os.execute("mkdir -p " .. tmpdir)
-        local source_path = tmpdir .. "/source.lua"
-        file_io.write(source_path, "return 1")
-        os.execute(string.format(
-            "cd %s && git init -q && git config user.email x@x.com && git config user.name x && git add source.lua && git commit -q -m init",
-            tmpdir))
+        local tmpdir, source_path = create_git_repo_with_source()
         local checker_path = tmpdir .. "/checker.lua"
         file_io.write(checker_path, 'local f=io.open("' .. source_path .. '");local c=f:read("*a");f:close();os.exit(c:match("0") and 1 or 0)')
         local lua_code = string.format(
@@ -133,7 +135,7 @@ describe("apply_plan", function()
             checker_path, source_path)
         local content = run_lua(lua_code)
         assert_contains(content, mutator.KILLED_MESSAGE)
-        os.execute("rm -rf " .. tmpdir)
+        cleanup_git_repo(tmpdir)
     end)
 end)
 
