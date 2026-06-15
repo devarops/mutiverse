@@ -93,14 +93,14 @@ local function mutation_extraction_script()
     return [[import json, sys
 with open(sys.argv[1]) as f:
     data = json.load(f)
-for m in data["mutations"]:
-    print(m["file_path"])
-    print(m["start_row"])
-    print(m["start_col"])
-    print(m["end_col"])
-    print(m["original"])
-    print(m["replacement"])
-    print(m["operator"])
+for mutation in data["mutations"]:
+    print(mutation["file_path"])
+    print(mutation["start_row"])
+    print(mutation["start_col"])
+    print(mutation["end_col"])
+    print(mutation["original"])
+    print(mutation["replacement"])
+    print(mutation["operator"])
     print("]] .. RECORD_SEPARATOR .. [[")
 ]]
 end
