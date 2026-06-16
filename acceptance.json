@@ -11,8 +11,8 @@
         "A valid mutation-plan.json passes validation (exit 0).",
         "An invalid mutation-plan.json (e.g., missing required field) fails validation with a non-zero exit."
       ],
-      "gold": "backlog",
-      "passes": false
+      "gold": "done",
+      "passes": true
     },
     {
       "id": "02",
@@ -22,7 +22,7 @@
         "Applying a CONSTANT_NUMERIC_FLIP mutation replaces the target text in the source file.",
         "The original source file remains unchanged after mutation."
       ],
-      "gold": "backlog",
+      "gold": "current",
       "passes": false
     },
     {
