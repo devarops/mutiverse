@@ -22,8 +22,8 @@
         "Applying a CONSTANT_NUMERIC_FLIP mutation replaces the target text in the source file.",
         "The original source file remains unchanged after mutation."
       ],
-      "gold": "current",
-      "passes": false
+      "gold": "done",
+      "passes": true
     },
     {
       "id": "03",
@@ -34,8 +34,8 @@
         "A mutation whose original text does NOT match the text at the specified row/col location reports an error (the mismatch indicates the mutation candidate is stale or the source has changed).",
         "The replacement text is inserted at the correct column boundary within the specified row, replacing exactly the range [start_col, end_col)."
       ],
-      "gold": "backlog",
-      "passes": false
+      "gold": "done",
+      "passes": true
     },
     {
       "id": "04",
@@ -45,8 +45,8 @@
         "When the test command exits with 0 (all tests pass), the function prints 👾 survived and returns false.",
         "When the test command exits non-zero (at least one test fails), the function prints 🏹 killed and returns true."
       ],
-      "gold": "backlog",
-      "passes": false
+      "gold": "done",
+      "passes": true
     },
     {
       "id": "05",
@@ -59,7 +59,7 @@
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
         "After apply_mutations_from_plan completes, the source files are restored to their original state."
       ],
-      "gold": "backlog",
+      "gold": "current",
       "passes": false
     }
   ]
