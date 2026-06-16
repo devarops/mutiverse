@@ -134,6 +134,14 @@ local function mutate_and_test_file(mutation, mutated, original, test_command)
     file_io.write(mutation.file_path, original)
 end
 
+local function build_mutation_report(mutations)
+    local parts = {}
+    for _, mutation in ipairs(mutations) do
+        table.insert(parts, '{"file_path":"' .. mutation.file_path .. '"}')
+    end
+    return "[" .. table.concat(parts, ",") .. "]"
+end
+
 function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
     local mutations = parse_json_mutations(plan_path)
     local results = {}
@@ -146,11 +154,7 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         end
     end
     if report_path then
-        local parts = {}
-        for _, mutation in ipairs(mutations) do
-            table.insert(parts, '{"file_path":"' .. mutation.file_path .. '"}')
-        end
-        local json = "[" .. table.concat(parts, ",") .. "]"
+        local json = build_mutation_report(mutations)
         file_io.write(report_path, json)
     end
     return results
