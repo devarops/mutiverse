@@ -144,4 +144,8 @@ describe("apply_mutations_from_plan", function()
     it("should include original field in the JSON report", function()
         assert_contains(report_content_for_plan(), '"original"')
     end)
+
+    it("should include replacement field in the JSON report", function()
+        assert_contains(report_content_for_plan(), '"replacement"')
+    end)
 end)
