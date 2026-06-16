@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.2.0] - 2026-06-15
+
 ### Added
 
 - `mutator.apply_mutations_from_plan(plan_path, test_command, report_path)` — full orchestrator: reads a JSON plan, applies mutations, runs tests, prints outcomes, and writes a JSON report
@@ -40,5 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validation function `mutator.has_mutations(plan)` to check plan structure
 - `file_io.read(path)` and `file_io.write(path, content)` — file read/write helpers
 
-[Unreleased]: https://github.com/devarops/mutiverse/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/devarops/mutiverse/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/devarops/mutiverse/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/devarops/mutiverse/releases/tag/v0.1.0
