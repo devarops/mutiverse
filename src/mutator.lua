@@ -141,6 +141,7 @@ local function build_mutation_report(mutations)
     for _, mutation in ipairs(mutations) do
         local record = '{"file_path":"' .. mutation.file_path
             .. '","original":"' .. json_escape(mutation.original)
+            .. '","replacement":"' .. json_escape(mutation.replacement)
             .. '","killed":false}'
         table.insert(parts, record)
     end
