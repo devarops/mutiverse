@@ -20,18 +20,6 @@ Applies a single mutation to source text.
 
 ---
 
-### mutator.apply_plan(plan, source)
-
-Applies all mutations from a mutation plan sequentially.
-
-- **Parameters:**
-  - `plan` (table): Plan object with `mutations` array.
-  - `source` (string): The source text to mutate.
-- **Returns:** (string) The source text after all mutations are applied.
-- **Notes:** Mutations are applied in array order; each mutation operates on the result of the previous one.
-
----
-
 ### mutator.apply_mutation_to_file(mutation, input_path, output_path)
 
 Applies a single mutation to a file and writes the result.
@@ -61,8 +49,21 @@ Executes a test command and prints the mutation outcome.
 
 - **Parameters:**
   - `command` (string): Shell command to execute.
-- **Returns:** Nothing.
+- **Returns:** (boolean) `false` if the command exits with 0 (survived), `true` if it exits non-zero (killed).
 - **Side effects:** Prints `"👾 survived"` to stdout when the command exits 0. Prints `"🏹 killed"` to stdout when the command exits non-zero.
+
+---
+
+### mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
+
+Reads a mutation plan from a JSON file and applies each mutation.
+
+- **Parameters:**
+  - `plan_path` (string): Path to the mutation plan JSON file.
+  - `test_command` (string, optional): Shell command to run after each mutation. When provided, the mutation is applied to the source file in place, the test is executed, and the source is restored.
+  - `report_path` (string, optional): Path to write a JSON report. The report contains all mutation fields plus a `"killed": false` entry per mutation.
+- **Returns:** (array of strings) Mutated source text for each mutation, in plan order.
+- **Errors:** If the plan file does not exist or is malformed, an error is raised. If a mutation references a source file that does not exist, an error is raised.
 
 ---
 
