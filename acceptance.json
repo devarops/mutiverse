@@ -51,13 +51,13 @@
     {
       "id": "05",
       "title": "Orchestrate the mutation testing loop",
-      "description": "apply_plan is the orchestrator. It reads a mutation plan from a JSON file, applies each mutation one at a time to the original source file (in place), runs the test command after each, prints per-mutation outcome, and writes a final JSON report with killed/survived results.",
+      "description": "apply_mutations_from_plan is the orchestrator. It reads a mutation plan from a JSON file, applies each mutation one at a time to the original source file (in place), runs the test command after each, prints per-mutation outcome, and writes a final JSON report with killed/survived results.",
       "acceptance_criteria": [
-        "Given a mutation plan JSON file and a test command, apply_plan applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
+        "Given a mutation plan JSON file and a test command, apply_mutations_from_plan applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
         "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations via git checkout.",
         "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": true|false field per entry.",
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
-        "After apply_plan completes, the source files are restored to their original state."
+        "After apply_mutations_from_plan completes, the source files are restored to their original state."
       ],
       "gold": "done",
       "passes": true
