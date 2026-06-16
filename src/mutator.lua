@@ -134,10 +134,14 @@ local function mutate_and_test_file(mutation, mutated, original, test_command)
     file_io.write(mutation.file_path, original)
 end
 
+local function json_escape(s)
+    return s:gsub("\\", "\\\\"):gsub('"', '\\"')
+end
+
 local function build_mutation_report(mutations)
     local parts = {}
     for _, mutation in ipairs(mutations) do
-        table.insert(parts, '{"file_path":"' .. mutation.file_path .. '","killed":false}')
+        table.insert(parts, '{"file_path":"' .. mutation.file_path .. '","original":"' .. json_escape(mutation.original) .. '","killed":false}')
     end
     return "[" .. table.concat(parts, ",") .. "]"
 end
