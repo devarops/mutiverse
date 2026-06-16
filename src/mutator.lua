@@ -137,7 +137,7 @@ end
 local function build_mutation_report(mutations)
     local parts = {}
     for _, mutation in ipairs(mutations) do
-        table.insert(parts, '{"file_path":"' .. mutation.file_path .. '"}')
+        table.insert(parts, '{"file_path":"' .. mutation.file_path .. '","killed":false}')
     end
     return "[" .. table.concat(parts, ",") .. "]"
 end
