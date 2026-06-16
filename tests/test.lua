@@ -57,6 +57,18 @@ describe("apply_mutation_to_file", function()
         local mutated_content = file_io.read(output_path)
         assert.equals("return 0", mutated_content)
     end)
+
+    it("should leave the original source file unchanged after mutation", function()
+        input_path = os.tmpname()
+        output_path = os.tmpname()
+        local original_content = "return 1"
+        file_io.write(input_path, original_content)
+
+        mutator.apply_mutation_to_file({original="1", replacement="0"}, input_path, output_path)
+
+        local input_after = file_io.read(input_path)
+        assert.equals(original_content, input_after)
+    end)
 end)
 
 describe("is_mutation_killed", function()
