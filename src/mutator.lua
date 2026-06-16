@@ -146,7 +146,12 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         end
     end
     if report_path then
-        file_io.write(report_path, "{}")
+        local parts = {}
+        for _, mutation in ipairs(mutations) do
+            table.insert(parts, '{"file_path":"' .. mutation.file_path .. '"}')
+        end
+        local json = "[" .. table.concat(parts, ",") .. "]"
+        file_io.write(report_path, json)
     end
     return results
 end
