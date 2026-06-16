@@ -128,11 +128,10 @@ local function parse_json_mutations(plan_path)
     return results
 end
 
-local function mutate_and_test_file(mutation, source, test_command)
-    local mutated = mutator.apply_mutation(mutation, source)
+local function mutate_and_test_file(mutation, mutated, original, test_command)
     file_io.write(mutation.file_path, mutated)
     mutator.run_test(test_command)
-    file_io.write(mutation.file_path, source)
+    file_io.write(mutation.file_path, original)
 end
 
 function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
@@ -143,7 +142,7 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         local result = mutator.apply_mutation(mutation, source)
         table.insert(results, result)
         if test_command then
-            mutate_and_test_file(mutation, source, test_command)
+            mutate_and_test_file(mutation, result, source, test_command)
         end
     end
     if report_path then
