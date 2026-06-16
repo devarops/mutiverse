@@ -139,11 +139,17 @@ end
 local function build_mutation_report(mutations)
     local parts = {}
     for _, mutation in ipairs(mutations) do
-        local record = '{"file_path":"' .. mutation.file_path
-            .. '","original":"' .. json_escape(mutation.original)
-            .. '","replacement":"' .. json_escape(mutation.replacement)
-            .. '","killed":false}'
-        table.insert(parts, record)
+        local fields = {}
+        for _, spec in ipairs(FIELD_SPECS) do
+            local value = mutation[spec.name]
+            if spec.convert then
+                table.insert(fields, '"' .. spec.name .. '":' .. value)
+            else
+                table.insert(fields, '"' .. spec.name .. '":"' .. json_escape(value) .. '"')
+            end
+        end
+        table.insert(fields, '"killed":false')
+        table.insert(parts, "{" .. table.concat(fields, ",") .. "}")
     end
     return "[" .. table.concat(parts, ",") .. "]"
 end
