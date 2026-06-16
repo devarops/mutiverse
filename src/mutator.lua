@@ -84,19 +84,17 @@ function mutator.validate_plan_file(plan_path)
 end
 
 local function mutation_extraction_script()
-    return [[import json, sys
-with open(sys.argv[1]) as f:
-    data = json.load(f)
-for mutation in data["mutations"]:
-    print(mutation["file_path"])
-    print(mutation["start_row"])
-    print(mutation["start_col"])
-    print(mutation["end_col"])
-    print(mutation["original"])
-    print(mutation["replacement"])
-    print(mutation["operator"])
-    print("]] .. RECORD_SEPARATOR .. [[")
-]]
+    local lines = {
+        "import json, sys",
+        "with open(sys.argv[1]) as f:",
+        "    data = json.load(f)",
+        "for mutation in data[\"mutations\"]:",
+    }
+    for _, spec in ipairs(FIELD_SPECS) do
+        table.insert(lines, '    print(mutation["' .. spec.name .. '"])')
+    end
+    table.insert(lines, '    print("' .. RECORD_SEPARATOR .. '")')
+    return table.concat(lines, "\n") .. "\n"
 end
 
 local function parse_mutation_records(line_iterator)
@@ -141,7 +139,10 @@ end
 local function build_mutation_report(mutations)
     local parts = {}
     for _, mutation in ipairs(mutations) do
-        table.insert(parts, '{"file_path":"' .. mutation.file_path .. '","original":"' .. json_escape(mutation.original) .. '","killed":false}')
+        local record = '{"file_path":"' .. mutation.file_path
+            .. '","original":"' .. json_escape(mutation.original)
+            .. '","killed":false}'
+        table.insert(parts, record)
     end
     return "[" .. table.concat(parts, ",") .. "]"
 end
