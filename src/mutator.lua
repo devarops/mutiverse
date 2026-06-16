@@ -101,20 +101,17 @@ end
 
 local function parse_mutation_records(line_iterator)
     local results = {}
-    local mutation
-    local field_index = 0
+    local fields = {}
     for line in line_iterator do
         if line == RECORD_SEPARATOR then
-            table.insert(results, mutation)
-            mutation = nil
-            field_index = 0
-        else
-            if not mutation then
-                mutation = {}
+            local mutation = {}
+            for index, spec in ipairs(FIELD_SPECS) do
+                mutation[spec.name] = spec.convert and spec.convert(fields[index]) or fields[index]
             end
-            field_index = field_index + 1
-            local spec = FIELD_SPECS[field_index]
-            mutation[spec.name] = spec.convert and spec.convert(line) or line
+            table.insert(results, mutation)
+            fields = {}
+        else
+            table.insert(fields, line)
         end
     end
     return results
