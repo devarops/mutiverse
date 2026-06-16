@@ -128,13 +128,18 @@ local function parse_json_mutations(plan_path)
     return results
 end
 
-function mutator.apply_mutations_from_plan(plan_path)
+function mutator.apply_mutations_from_plan(plan_path, test_command)
     local mutations = parse_json_mutations(plan_path)
     local results = {}
     for _, mutation in ipairs(mutations) do
         local source = file_io.read(mutation.file_path)
         local result = mutator.apply_mutation(mutation, source)
         table.insert(results, result)
+        if test_command then
+            file_io.write(mutation.file_path, result)
+            mutator.run_test(test_command)
+            file_io.write(mutation.file_path, source)
+        end
     end
     return results
 end
