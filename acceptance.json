@@ -55,7 +55,7 @@
       "acceptance_criteria": [
         "Given a mutation plan JSON file and a test command, apply_mutations_from_plan applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
         "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations via git checkout.",
-        "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": false|false field per entry.",
+        "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": false|true field per entry.",
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
         "After apply_mutations_from_plan completes, the source files are restored to their original state."
       ],
