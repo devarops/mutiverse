@@ -105,7 +105,8 @@ end
 local function restore_source_via_git(source_path)
     local dir = source_path:match("^(.+)/[^/]+$")
     if dir then
-        os.execute("cd " .. dir .. " && git stash 2>/dev/null >/dev/null && git checkout master -q 2>/dev/null")
+        local command = "cd " .. dir .. " && git stash 2>/dev/null >/dev/null && git checkout master -q 2>/dev/null"
+        os.execute(command)
     end
 end
 
