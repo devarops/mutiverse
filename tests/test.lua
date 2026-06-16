@@ -16,6 +16,15 @@ local function run_mutator_test(command)
     return run_lua(string.format([[local mutator = require('mutator'); mutator.run_test('%s')]], command))
 end
 
+local function report_content_for_plan()
+    local report_path = os.tmpname()
+    os.remove(report_path)
+    mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
+    local content = file_io.read(report_path)
+    os.remove(report_path)
+    return content
+end
+
 describe("apply_mutation", function()
     it("should replace original text with replacement text", function()
         local mutated_content = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
@@ -125,20 +134,10 @@ describe("apply_mutations_from_plan", function()
     end)
 
     it("should include mutation file_path in the JSON report", function()
-        local report_path = os.tmpname()
-        os.remove(report_path)
-        mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
-        local content = file_io.read(report_path)
-        assert_contains(content, "tests/data/transformations.py")
-        os.remove(report_path)
+        assert_contains(report_content_for_plan(), "tests/data/transformations.py")
     end)
 
     it("should include killed field in the JSON report", function()
-        local report_path = os.tmpname()
-        os.remove(report_path)
-        mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
-        local content = file_io.read(report_path)
-        assert_contains(content, '"killed"')
-        os.remove(report_path)
+        assert_contains(report_content_for_plan(), '"killed"')
     end)
 end)
