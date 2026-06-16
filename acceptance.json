@@ -11,8 +11,8 @@
         "A valid mutation-plan.json passes validation (exit 0).",
         "An invalid mutation-plan.json (e.g., missing required field) fails validation with a non-zero exit."
       ],
-      "gold": "done",
-      "passes": true
+      "gold": "backlog",
+      "passes": false
     },
     {
       "id": "02",
@@ -22,8 +22,8 @@
         "Applying a CONSTANT_NUMERIC_FLIP mutation replaces the target text in the source file.",
         "The original source file remains unchanged after mutation."
       ],
-      "gold": "done",
-      "passes": true
+      "gold": "backlog",
+      "passes": false
     },
     {
       "id": "03",
@@ -34,8 +34,8 @@
         "A mutation whose original text does NOT match the text at the specified row/col location reports an error (the mismatch indicates the mutation candidate is stale or the source has changed).",
         "The replacement text is inserted at the correct column boundary within the specified row, replacing exactly the range [start_col, end_col)."
       ],
-      "gold": "done",
-      "passes": true
+      "gold": "backlog",
+      "passes": false
     },
     {
       "id": "04",
@@ -45,8 +45,8 @@
         "When the test command exits with 0 (all tests pass), the function prints 👾 survived and returns false.",
         "When the test command exits non-zero (at least one test fails), the function prints 🏹 killed and returns true."
       ],
-      "gold": "done",
-      "passes": true
+      "gold": "backlog",
+      "passes": false
     },
     {
       "id": "05",
@@ -55,12 +55,12 @@
       "acceptance_criteria": [
         "Given a mutation plan JSON file and a test command, apply_mutations_from_plan applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
         "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations via git checkout.",
-        "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": true|false field per entry.",
+        "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": false|false field per entry.",
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
         "After apply_mutations_from_plan completes, the source files are restored to their original state."
       ],
-      "gold": "done",
-      "passes": true
+      "gold": "backlog",
+      "passes": false
     }
   ]
 }

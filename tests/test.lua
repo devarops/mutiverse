@@ -16,22 +16,6 @@ local function run_mutator_test(command)
     return run_lua(string.format([[local mutator = require('mutator'); mutator.run_test('%s')]], command))
 end
 
-local function create_git_repo_with_source()
-    local tmpdir = os.tmpname()
-    os.remove(tmpdir)
-    os.execute("mkdir -p " .. tmpdir)
-    local source_path = tmpdir .. "/source.lua"
-    file_io.write(source_path, "return 1")
-    os.execute(string.format(
-        "cd %s && git init -q && git config user.email x@x.com && git config user.name x && git add source.lua && git commit -q -m init",
-        tmpdir))
-    return tmpdir, source_path
-end
-
-local function cleanup_git_repo(tmpdir)
-    os.execute("rm -rf " .. tmpdir)
-end
-
 describe("apply_mutation", function()
     it("should replace original text with replacement text", function()
         local mutated_content = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
@@ -51,91 +35,6 @@ describe("apply_mutation", function()
     it("should report an error when start_row is beyond the file", function()
         local ok = pcall(mutator.apply_mutation, {start_row=10, start_col=0, end_col=1, original="a", replacement="z"}, "abc")
         assert.is_falsy(ok)
-    end)
-end)
-
-describe("apply_plan", function()
-    it("should apply all mutations from a plan to source text", function()
-        local plan = {mutations={{original="1", replacement="0"}, {original="2", replacement="3"}}}
-        local results = mutator.apply_plan(plan, "1+2")
-        assert.equals(2, #results)
-        assert.equals("0+2", results[1])
-        assert.equals("1+3", results[2])
-    end)
-
-    it("should apply each mutation individually to the original source", function()
-        local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
-        local results = mutator.apply_plan(plan, "1")
-        assert.equals(2, #results)
-    end)
-
-    it("should run the test command for each mutation and print the outcome", function()
-        local content = run_lua([[local m = require('mutator'); m.apply_plan({mutations={{original='1', replacement='2'}}}, 'return 1', 'true')]])
-        assert_contains(content, mutator.SURVIVED_MESSAGE)
-    end)
-
-    it("should restore source file after mutations when source_path is provided with test_command", function()
-        local tmpfile = os.tmpname()
-        file_io.write(tmpfile, "return 1")
-        local plan = {mutations={{original="1", replacement="0"}}}
-        mutator.apply_plan(plan, "return 1", "true", tmpfile)
-        local content = file_io.read(tmpfile)
-        assert.equals("return 1", content)
-        os.remove(tmpfile)
-    end)
-
-    it("should write a JSON report to report_path with killed/survived results", function()
-        local plan = {mutations={{original="1", replacement="0"}}}
-        local report_path = os.tmpname()
-        os.remove(report_path)
-        mutator.apply_plan(plan, "return 1", nil, nil, report_path)
-        local ok = pcall(file_io.read, report_path)
-        assert.is_true(ok)
-        os.remove(report_path)
-    end)
-
-    it("should restore source file to original state after completing all mutations", function()
-        local tmpfile = os.tmpname()
-        file_io.write(tmpfile, "return 1")
-        local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
-        mutator.apply_plan(plan, "return 1", nil, tmpfile)
-        local content = file_io.read(tmpfile)
-        assert.equals("return 1", content)
-        os.remove(tmpfile)
-    end)
-
-    it("should restore source file after all mutations when test_command is provided", function()
-        local tmpfile = os.tmpname()
-        file_io.write(tmpfile, "return 1")
-        local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
-        mutator.apply_plan(plan, "return 1", "true", tmpfile)
-        local content = file_io.read(tmpfile)
-        assert.equals("return 1", content)
-        os.remove(tmpfile)
-    end)
-
-    it("should revert source file between each mutation using git checkout", function()
-        local tmpdir, source_path = create_git_repo_with_source()
-        local plan = {mutations={{original="1", replacement="0"}, {original="1", replacement="2"}}}
-        mutator.apply_plan(plan, "return 1", nil, source_path)
-        local handle = io.popen(string.format("cd %s && git reflog --oneline", tmpdir))
-        local reflog = handle:read("*a")
-        handle:close()
-        local _, count = reflog:gsub("checkout", "")
-        assert.is_true(count >= 1)
-        cleanup_git_repo(tmpdir)
-    end)
-
-    it("should apply mutation to source file in a git repo before test command runs", function()
-        local tmpdir, source_path = create_git_repo_with_source()
-        local checker_path = tmpdir .. "/checker.lua"
-        file_io.write(checker_path, 'local f=io.open("' .. source_path .. '");local c=f:read("*a");f:close();os.exit(c:match("0") and 1 or 0)')
-        local lua_code = string.format(
-            [[local m = require('mutator'); m.apply_plan({mutations={{original='1', replacement='0'}}}, 'return 1', 'lua %s', '%s')]],
-            checker_path, source_path)
-        local content = run_lua(lua_code)
-        assert_contains(content, mutator.KILLED_MESSAGE)
-        cleanup_git_repo(tmpdir)
     end)
 end)
 
@@ -183,18 +82,6 @@ describe("run_test", function()
 
     it("should return true when test command exits non-zero", function()
         assert.is_true(mutator.run_test("false"))
-    end)
-end)
-
-describe("plan_has_mutations", function()
-    it("should return true for a mutation plan with a mutations field", function()
-        local plan = {mutations={}}
-        assert.is_true(mutator.plan_has_mutations(plan))
-    end)
-
-    it("should return false for a plan missing the mutations field", function()
-        local plan = {}
-        assert.is_false(mutator.plan_has_mutations(plan))
     end)
 end)
 

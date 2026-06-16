@@ -55,91 +55,11 @@ local FIELD_SPECS = {
     {name = "operator"},
 }
 
-function mutator.plan_has_mutations(plan)
-    return plan.mutations ~= nil
-end
-
 function mutator.apply_mutation(mutation, source)
     if mutation.start_row ~= nil then
         return replace_at_location(mutation, source)
     end
     return replace_globally(mutation, source)
-end
-
-local function escape_json(s)
-    return '"' .. s:gsub('["\\]', function(c) return '\\' .. c end) .. '"'
-end
-
-local function encode_json_value(value)
-    if type(value) == "boolean" then
-        return tostring(value)
-    end
-    return escape_json(value)
-end
-
-local function encode_report_entry(entry)
-    local fields = {}
-    for k, v in pairs(entry) do
-        table.insert(fields, escape_json(k) .. ":" .. encode_json_value(v))
-    end
-    return "{" .. table.concat(fields, ",") .. "}"
-end
-
-local function encode_report(report_entries)
-    local parts = {}
-    for _, entry in ipairs(report_entries) do
-        table.insert(parts, encode_report_entry(entry))
-    end
-    return "[" .. table.concat(parts, ",") .. "]"
-end
-
-local function build_report_entry(mutation, killed)
-    local entry = {}
-    for k, v in pairs(mutation) do
-        entry[k] = v
-    end
-    entry.killed = killed
-    return entry
-end
-
-local function restore_source_via_git(source_path)
-    local dir = source_path:match("^(.+)/[^/]+$")
-    if dir then
-        local command = "cd " .. dir .. " && git stash 2>/dev/null >/dev/null && git checkout master -q 2>/dev/null"
-        os.execute(command)
-    end
-end
-
-local function apply_single_mutation(mutation, original_source, test_command, source_path)
-    local result = mutator.apply_mutation(mutation, original_source)
-    if source_path then
-        file_io.write(source_path, result)
-    end
-    local killed = false
-    if test_command then
-        killed = mutator.run_test(test_command)
-    end
-    if source_path then
-        restore_source_via_git(source_path)
-    end
-    return result, build_report_entry(mutation, killed)
-end
-
-function mutator.apply_plan(plan, original_source, test_command, source_path, report_path)
-    local results = {}
-    local report_entries = {}
-    for _, mutation in ipairs(plan.mutations) do
-        local result, report_entry = apply_single_mutation(mutation, original_source, test_command, source_path)
-        table.insert(results, result)
-        table.insert(report_entries, report_entry)
-    end
-    if source_path then
-        file_io.write(source_path, original_source)
-    end
-    if report_path then
-        file_io.write(report_path, encode_report(report_entries))
-    end
-    return results
 end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
