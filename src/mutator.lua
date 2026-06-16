@@ -135,7 +135,7 @@ local function mutate_and_test_file(mutation, source, test_command)
     file_io.write(mutation.file_path, source)
 end
 
-function mutator.apply_mutations_from_plan(plan_path, test_command)
+function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
     local mutations = parse_json_mutations(plan_path)
     local results = {}
     for _, mutation in ipairs(mutations) do
@@ -145,6 +145,9 @@ function mutator.apply_mutations_from_plan(plan_path, test_command)
         if test_command then
             mutate_and_test_file(mutation, source, test_command)
         end
+    end
+    if report_path then
+        file_io.write(report_path, "{}")
     end
     return results
 end
