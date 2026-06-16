@@ -123,4 +123,13 @@ describe("apply_mutations_from_plan", function()
         if f then f:close() end
         os.remove(report_path)
     end)
+
+    it("should include mutation file_path in the JSON report", function()
+        local report_path = os.tmpname()
+        os.remove(report_path)
+        mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
+        local content = file_io.read(report_path)
+        assert_contains(content, "tests/data/transformations.py")
+        os.remove(report_path)
+    end)
 end)
