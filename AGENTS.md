@@ -56,7 +56,6 @@
 | `all`    | `src/main.lua`                             |
 | `check`  | `luacheck src`                             |
 | `tests`  | `busted tests/test.lua`                    |
-| `parse`  | tree-sitter parse for Python and R fixtures |
 | `init`   | `parse tests` (first-time setup)           |
 
 ## TDD workflow
@@ -80,7 +79,6 @@ assets/           Diagrams and images
 
 ## Key constraints
 
-1. The core must not depend on Tree-sitter or any parsing library.
-2. The core operates only on raw source code and byte ranges.
-3. Plug-ins fully own parsing and syntax analysis.
-4. The only shared contract between host and plug-ins is mutation candidates (JSON).
+1. The core operates only on raw source code and byte ranges.
+2. Plug-ins fully own parsing and syntax analysis.
+3. The only shared contract between host and plug-ins is mutation candidates (JSON).
