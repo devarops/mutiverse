@@ -121,7 +121,7 @@ describe("apply_mutations_from_plan", function()
         assert_contains(results[1], "    return 0")
     end)
 
-    it("should print survived per mutation when test command is provided", function()
+    it("should print survived per mutation", function()
         local content = run_lua([[local mutator = require('mutator'); mutator.apply_mutations_from_plan('tests/data/mutation-plan.json', 'true', os.tmpname())]])
         assert_contains(content, mutator.SURVIVED_MESSAGE)
     end)
