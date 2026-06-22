@@ -113,7 +113,7 @@ describe("validate_plan_file", function()
 end)
 
 describe("apply_mutations_from_plan", function()
-    it("should apply CONSTANT_NUMERIC_FLIP mutation from plan to Python source file", function()
+    it("should apply a mutation from plan to source file", function()
         local report_path = os.tmpname()
         os.remove(report_path)
         local results = mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
