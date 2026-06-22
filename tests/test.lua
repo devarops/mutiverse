@@ -149,3 +149,11 @@ describe("apply_mutations_from_plan", function()
         assert_contains(report_content_for_plan(), '"replacement"')
     end)
 end)
+
+describe("report_mutation_outcome", function()
+    it("should return a JSON entry with killed set to true when killed is true", function()
+        local mutation = {file_path="test.py", start_row=0, start_col=4, end_col=5, original="1", replacement="0", operator="CONSTANT_NUMERIC_FLIP"}
+        local result = mutator.report_mutation_outcome(mutation, true)
+        assert_contains(result, '"killed":true')
+    end)
+end)
