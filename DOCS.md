@@ -14,7 +14,7 @@ Applies a single mutation to source text.
     - `start_col` (integer, optional): 0-based starting column (required if `start_row` is present).
     - `end_col` (integer, optional): 0-based exclusive ending column (required if `start_row` is present).
   - `source` (string): The source text to mutate.
-- **Returns:** (string) The mutated source text.
+- **Returns:** (string) The mutant source text.
 - **Errors:** When `start_row` is provided and `mutation.original` does not match the text at that location, an error is raised.
 - **Notes:** Without location fields, performs a global text replacement (escapes Lua pattern characters).
 
@@ -27,7 +27,7 @@ Applies a single mutation to a file and writes the result.
 - **Parameters:**
   - `mutation` (table): Mutation object (see `apply_mutation`).
   - `input_path` (string): Path to the source file.
-  - `output_path` (string): Path to write the mutated output.
+  - `output_path` (string): Path to write the mutant output.
 - **Returns:** Nothing.
 - **Errors:** If `input_path` does not exist, an error is raised (delegates to `file_io.read`).
 
@@ -62,7 +62,7 @@ Reads a mutation plan from a JSON file and applies each mutation.
   - `plan_path` (string): Path to the mutation plan JSON file.
   - `test_command` (string, optional): Shell command to run after each mutation. When provided, the mutation is applied to the source file in place, the test is executed, and the source is restored.
   - `report_path` (string, optional): Path to write a JSON report. The report contains all mutation fields plus a `"killed": false` entry per mutation.
-- **Returns:** (array of strings) Mutated source text for each mutation, in plan order.
+- **Returns:** (array of strings) Mutant source text for each mutation, in plan order.
 - **Errors:** If the plan file does not exist or is malformed, an error is raised. If a mutation references a source file that does not exist, an error is raised.
 
 ---
