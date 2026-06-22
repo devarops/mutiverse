@@ -157,9 +157,9 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
     local report_parts = {}
     for _, mutation in ipairs(mutations) do
         local source = file_io.read(mutation.file_path)
-        local result = mutator.apply_mutation(mutation, source)
-        table.insert(results, result)
-        local killed = mutate_and_test_file(mutation, result, source, test_command)
+        local mutated = mutator.apply_mutation(mutation, source)
+        table.insert(results, mutated)
+        local killed = mutate_and_test_file(mutation, mutated, source, test_command)
         table.insert(report_parts, mutator.report_mutation_outcome(mutation, killed))
     end
     local json = "[" .. table.concat(report_parts, ",") .. "]"
