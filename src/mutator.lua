@@ -64,8 +64,8 @@ end
 
 function mutator.apply_mutation_to_file(mutation, input_path, output_path)
     local source = file_io.read(input_path)
-    local mutated_content = mutator.apply_mutation(mutation, source)
-    file_io.write(output_path, mutated_content)
+    local mutant = mutator.apply_mutation(mutation, source)
+    file_io.write(output_path, mutant)
 end
 
 function mutator.is_mutation_killed(command)
@@ -126,8 +126,8 @@ local function parse_json_mutations(plan_path)
     return results
 end
 
-local function mutate_and_test_file(mutation, mutated, original, test_command)
-    file_io.write(mutation.file_path, mutated)
+local function mutate_and_test_file(mutation, mutant, original, test_command)
+    file_io.write(mutation.file_path, mutant)
     local killed = mutator.run_test(test_command)
     file_io.write(mutation.file_path, original)
     return killed
@@ -153,18 +153,18 @@ end
 
 function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
     local mutations = parse_json_mutations(plan_path)
-    local mutated_contents = {}
+    local mutants = {}
     local report_parts = {}
     for _, mutation in ipairs(mutations) do
         local source = file_io.read(mutation.file_path)
-        local mutated = mutator.apply_mutation(mutation, source)
-        table.insert(mutated_contents, mutated)
-        local killed = mutate_and_test_file(mutation, mutated, source, test_command)
+        local mutant = mutator.apply_mutation(mutation, source)
+        table.insert(mutants, mutant)
+        local killed = mutate_and_test_file(mutation, mutant, source, test_command)
         table.insert(report_parts, mutator.report_mutation_outcome(mutation, killed))
     end
     local json = "[" .. table.concat(report_parts, ",") .. "]"
     file_io.write(report_path, json)
-    return mutated_contents
+    return mutants
 end
 
 return mutator

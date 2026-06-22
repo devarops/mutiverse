@@ -27,13 +27,13 @@ end
 
 describe("apply_mutation", function()
     it("should replace original text with replacement text", function()
-        local mutated_content = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
-        assert.equals("return 0", mutated_content)
+        local mutant = mutator.apply_mutation({original="1", replacement="0"}, "return 1")
+        assert.equals("return 0", mutant)
     end)
 
     it("should replace only at the specified row/col when location fields are provided", function()
-        local mutated_content = mutator.apply_mutation({start_row=0, start_col=4, end_col=5, original="1", replacement="0"}, "x = 1\ny = 1")
-        assert.equals("x = 0\ny = 1", mutated_content)
+        local mutant = mutator.apply_mutation({start_row=0, start_col=4, end_col=5, original="1", replacement="0"}, "x = 1\ny = 1")
+        assert.equals("x = 0\ny = 1", mutant)
     end)
 
     it("should report an error when original text does not match at the specified location", function()
@@ -56,15 +56,15 @@ describe("apply_mutation_to_file", function()
         if output_path then os.remove(output_path) end
     end)
 
-    it("should read source file, apply mutation, and write mutated content to output file", function()
+    it("should read source file, apply mutation, and write mutant to output file", function()
         input_path = os.tmpname()
         output_path = os.tmpname()
         file_io.write(input_path, "return 1")
 
         mutator.apply_mutation_to_file({original="1", replacement="0"}, input_path, output_path)
 
-        local mutated_content = file_io.read(output_path)
-        assert.equals("return 0", mutated_content)
+        local mutant = file_io.read(output_path)
+        assert.equals("return 0", mutant)
     end)
 
     it("should leave the original source file unchanged after mutation", function()
