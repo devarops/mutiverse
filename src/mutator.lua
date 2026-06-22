@@ -161,9 +161,9 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         table.insert(mutants, mutant)
         local killed = mutate_and_test_file(mutation, mutant, source, test_command)
         table.insert(report_parts, mutator.report_mutation_outcome(mutation, killed))
+        local json = "[" .. table.concat(report_parts, ",") .. "]"
+        file_io.write(report_path, json)
     end
-    local json = "[" .. table.concat(report_parts, ",") .. "]"
-    file_io.write(report_path, json)
     return mutants
 end
 
