@@ -5,11 +5,10 @@
     {
       "id": "01",
       "title": "Validate mutation plan against schema",
-      "description": "We create a Lua function that runs jsonschema.",
+      "description": "A function validates a mutation plan against its schema.",
       "acceptance_criteria": [
-        "Use jsonschema to validate tests/data/mutation-plan.json against schemas/mutation-plan.schema.json.",
-        "A valid mutation-plan.json passes validation (exit 0).",
-        "An invalid mutation-plan.json (e.g., missing required field) fails validation with a non-zero exit."
+        "A valid mutation plan passes validation (exit 0).",
+        "An invalid mutation plan (e.g., missing required field) fails validation (exit non-zero)."
       ],
       "gold": "done",
       "passes": true
@@ -17,9 +16,9 @@
     {
       "id": "02",
       "title": "Apply a single mutation to a source file",
-      "description": "Implement a Lua function that reads a source file, applies one mutation from the mutation plan (replacing original text with replacement text at the specified location), and writes the result to a temporary file.",
+      "description": "A function applies a single mutation from a plan to a source file.",
       "acceptance_criteria": [
-        "Applying a CONSTANT_NUMERIC_FLIP mutation replaces the target text in the source file.",
+        "Applying a mutation replaces the target text in the source file.",
         "The original source file remains unchanged after mutation."
       ],
       "gold": "done",
@@ -40,7 +39,7 @@
     {
       "id": "04",
       "title": "Run a test command and report mutant outcome",
-      "description": "A Lua function that executes a test command, prints whether the mutant survived or was killed, and returns a boolean.",
+      "description": "A function executes a test command, prints whether the mutant was killed or survived, and indicates the outcome.",
       "acceptance_criteria": [
         "When the test command exits with 0 (all tests pass), the function prints 👾 survived and returns false.",
         "When the test command exits non-zero (at least one test fails), the function prints 🏹 killed and returns true."
@@ -51,16 +50,17 @@
     {
       "id": "05",
       "title": "Orchestrate the mutation testing loop",
-      "description": "apply_mutations_from_plan is the orchestrator. It reads a mutation plan from a JSON file, applies each mutation one at a time to the original source file (in place), runs the test command after each, prints per-mutation outcome, and writes a final JSON report with killed/survived results.",
+      "description": "The orchestrator reads a mutation plan from a JSON file, applies each mutation one at a time to the original source file (in place), runs the test command after each, prints per-mutation outcome, and writes a final JSON report with killed/survived results.",
       "acceptance_criteria": [
-        "Given a mutation plan JSON file and a test command, apply_mutations_from_plan applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
-        "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations via git checkout.",
-        "A JSON report is written to report_path after all mutations are processed, containing the original mutation records with an additional \"killed\": false|true field per entry.",
+        "Given a mutation plan JSON file and a test command, the orchestrator applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
+        "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations.",
+        "A JSON report is written after all mutations are processed, containing the original mutation records with an additional killed field per entry. The killed value is true when the test command exits non-zero (the mutation was killed) and false when it exits zero (the mutation survived).",
+        "Each mutation's entry is added to the report as it is processed, so that a partial report is available if processing stops early.",
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
-        "After apply_mutations_from_plan completes, the source files are restored to their original state."
+        "After the orchestrator completes, the source files are restored to their original state."
       ],
-      "gold": "done",
-      "passes": true
+      "gold": "current",
+      "passes": false
     }
   ]
 }
