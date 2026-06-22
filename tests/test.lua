@@ -114,12 +114,15 @@ end)
 
 describe("apply_mutations_from_plan", function()
     it("should apply CONSTANT_NUMERIC_FLIP mutation from plan to Python source file", function()
-        local results = mutator.apply_mutations_from_plan("tests/data/mutation-plan.json")
+        local report_path = os.tmpname()
+        os.remove(report_path)
+        local results = mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
+        os.remove(report_path)
         assert_contains(results[1], "    return 0")
     end)
 
     it("should print survived per mutation when test command is provided", function()
-        local content = run_lua([[local mutator = require('mutator'); mutator.apply_mutations_from_plan('tests/data/mutation-plan.json', 'true')]])
+        local content = run_lua([[local mutator = require('mutator'); mutator.apply_mutations_from_plan('tests/data/mutation-plan.json', 'true', os.tmpname())]])
         assert_contains(content, mutator.SURVIVED_MESSAGE)
     end)
 

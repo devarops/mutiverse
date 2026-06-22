@@ -175,14 +175,10 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         local source = file_io.read(mutation.file_path)
         local result = mutator.apply_mutation(mutation, source)
         table.insert(results, result)
-        if test_command then
-            mutate_and_test_file(mutation, result, source, test_command)
-        end
+        mutate_and_test_file(mutation, result, source, test_command)
     end
-    if report_path then
-        local json = build_mutation_report(mutations)
-        file_io.write(report_path, json)
-    end
+    local json = build_mutation_report(mutations)
+    file_io.write(report_path, json)
     return results
 end
 
