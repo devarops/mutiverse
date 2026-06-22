@@ -53,7 +53,6 @@
 
 | Target   | Command                                    |
 |----------|--------------------------------------------|
-| `all`    | `src/main.lua`                             |
 | `check`  | `luacheck src`                             |
 | `tests`  | `busted tests/test.lua`                    |
 | `init`   | `parse tests` (first-time setup)           |

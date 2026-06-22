@@ -1,8 +1,4 @@
-all:
-	src/main.lua
-
 .PHONY: \
-	all \
 	check \
 	parse \
 	tests
