@@ -54,8 +54,9 @@
       "acceptance_criteria": [
         "Given a mutation plan JSON file and a test command, the orchestrator applies each mutation individually to the source file (in place), runs the test command, and prints 🏹 killed or 👾 survived for each mutation.",
         "Each mutation is applied to the original source — not to the result of a previous mutation. The source is reverted between mutations.",
-        "A JSON report is written after all mutations are processed, containing the original mutation records with an additional killed field per entry. The killed value is true when the test command exits non-zero (the mutation was killed) and false when it exits zero (the mutation survived).",
-        "Each mutation's entry is added to the report as it is processed, so that a partial report is available if processing stops early.",
+        "A JSON report entry is written as each mutation is processed, containing the original mutation record with an additional killed field.",
+        "Entries are appended incrementally, so a partial report is available if processing stops early.",
+        "The killed value is true when the test command exits non-zero (the mutation was killed) and false when it exits zero (the mutation survived).",
         "The report file is valid JSON matching the mutation record structure except for the added killed field.",
         "After the orchestrator completes, the source files are restored to their original state."
       ],

@@ -1,8 +1,8 @@
 # The Gold
 
-- A JSON report is written after all mutations are processed, containing the original mutation records with an additional killed field per entry.
+- A JSON report entry is written as each mutation is processed, containing the original mutation record with an additional killed field.
   The killed value is true when the test command exits non-zero (the mutation was killed) and false when it exits zero (the mutation survived).
-  Each mutation's entry is added to the report as it is processed, so that a partial report is available if processing stops early.
+  Entries are appended incrementally, so a partial report is available if processing stops early.
 
 ---
 
