@@ -126,7 +126,7 @@ describe("apply_mutations_from_plan", function()
         assert_contains(content, mutator.SURVIVED_MESSAGE)
     end)
 
-    it("should write a JSON report file when report_path is provided", function()
+    it("should write a JSON report file", function()
         local report_path = os.tmpname()
         os.remove(report_path)
         mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
