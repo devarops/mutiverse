@@ -136,6 +136,20 @@ local function json_escape(s)
     return s:gsub("\\", "\\\\"):gsub('"', '\\"')
 end
 
+function mutator.report_mutation_outcome(mutation, killed)
+    local fields = {}
+    for _, spec in ipairs(FIELD_SPECS) do
+        local value = mutation[spec.name]
+        if spec.convert then
+            table.insert(fields, '"' .. spec.name .. '":' .. value)
+        else
+            table.insert(fields, '"' .. spec.name .. '":"' .. json_escape(value) .. '"')
+        end
+    end
+    table.insert(fields, '"killed":' .. tostring(killed))
+    return "{" .. table.concat(fields, ",") .. "}"
+end
+
 local function build_mutation_report(mutations)
     local parts = {}
     for _, mutation in ipairs(mutations) do
