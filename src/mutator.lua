@@ -98,7 +98,7 @@ local function mutation_extraction_script()
 end
 
 local function parse_mutation_records(line_iterator)
-    local results = {}
+    local mutations = {}
     local fields = {}
     for line in line_iterator do
         if line == RECORD_SEPARATOR then
@@ -106,13 +106,13 @@ local function parse_mutation_records(line_iterator)
             for index, spec in ipairs(FIELD_SPECS) do
                 mutation[spec.name] = spec.convert and spec.convert(fields[index]) or fields[index]
             end
-            table.insert(results, mutation)
+            table.insert(mutations, mutation)
             fields = {}
         else
             table.insert(fields, line)
         end
     end
-    return results
+    return mutations
 end
 
 local function parse_json_mutations(plan_path)
@@ -120,10 +120,10 @@ local function parse_json_mutations(plan_path)
     local script = mutation_extraction_script()
     file_io.write(tmp, script)
     local handle = io.popen("python3 " .. tmp .. " " .. plan_path)
-    local results = parse_mutation_records(handle:lines())
+    local mutations = parse_mutation_records(handle:lines())
     handle:close()
     os.remove(tmp)
-    return results
+    return mutations
 end
 
 local function mutate_and_test_file(mutation, mutant, original, test_command)
