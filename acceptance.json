@@ -62,6 +62,19 @@
       ],
       "gold": "done",
       "passes": true
+    },
+    {
+      "id": "06",
+      "title": "CLI driver for mutation testing run",
+      "description": "A command-line interface that accepts a mutation plan, test command, and report path via required long flags, runs the orchestrator, writes the report, and exits with a code reflecting mutation outcomes.",
+      "acceptance_criteria": [
+        "When --plan, --report, --test-command, and --fail fast are provided and all mutants are killed, the report is written to --report and the driver exits 0.",
+        "When --plan, --report, --test-command, and --fail fast are provided and at least one mutant survives, the report is written to --report and the driver exits 1.",
+        "When any required flag is omitted, the driver exits 2.",
+        "When --fail is given a value other than fast, the driver exits 2."
+      ],
+      "gold": "current",
+      "passes": false
     }
   ]
 }
