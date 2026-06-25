@@ -1,8 +1,6 @@
 # The Gold
 
-- After the main loop in apply_mutations_from_plan is done, print a summary line with the total killed/survived counts and the report path:
-  E.g. 3 killed, 1 survived. Report written to /path/report.json.
-  It gives the user a quick overview without reading the report file.
+- (None — active criteria tracked in specs/mutiverse.spec.json)
 
 ---
 

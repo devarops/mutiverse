@@ -111,6 +111,13 @@
       }
     },
     {
+      "description": "Orchestrate — prints summary line with killed/survived counts and report path",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"prints summary line after mutation loop\" tests/test.lua"
+      }
+    },
+    {
       "description": "CLI driver — all mutants killed exits 0",
       "verify": {
         "type": "command",
