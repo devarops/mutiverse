@@ -13,7 +13,7 @@
       "description": "Validate plan — invalid plan fails validation (exit non-zero)",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "busted -t \"should fail validation for an invalid plan file\" tests/test.lua"
       }
     },
     {
