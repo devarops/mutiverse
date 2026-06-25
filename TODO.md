@@ -1,14 +1,4 @@
-# The Gold
-
-- After the main loop in apply_mutations_from_plan is done, print a summary line with the total killed/survived counts and the report path:
-  E.g. 3 killed, 1 survived. Report written to /path/report.json.
-  It gives the user a quick overview without reading the report file.
-
----
-
-# Backlog not part of the current Gold
-
-The items listed below are not part of the current Gold. They are backlog items kept for future cycles.
+# Backlog
 
 ## CLI design (from 2026-06-21 design session)
 
