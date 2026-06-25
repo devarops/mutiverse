@@ -127,7 +127,7 @@ local function parse_json_mutations(plan_path)
     return mutations
 end
 
-local function mutate_and_test_file(mutation, mutant, original, test_command)
+local function run_test_with_mutant(mutation, mutant, original, test_command)
     file_io.write(mutation.file_path, mutant)
     local killed = mutator.run_test(test_command)
     file_io.write(mutation.file_path, original)
@@ -160,7 +160,7 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         local source = file_io.read(mutation.file_path)
         local mutant = mutator.apply_mutation(mutation, source)
         table.insert(mutants, mutant)
-        local killed = mutate_and_test_file(mutation, mutant, source, test_command)
+        local killed = run_test_with_mutant(mutation, mutant, source, test_command)
         table.insert(report_entries, mutator.report_mutation_outcome(mutation, killed))
         local json = "[" .. table.concat(report_entries, ",") .. "]"
         file_io.write(report_path, json)
