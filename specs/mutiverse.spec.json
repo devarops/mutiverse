@@ -1,0 +1,142 @@
+{
+  "$schema": "https://qed.skovlund.dev/spec.schema.json",
+  "name": "mutiverse",
+  "criteria": [
+    {
+      "description": "Validate plan — valid plan passes validation (exit 0)",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"validate_plan_file\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Validate plan — invalid plan fails validation (exit non-zero)",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"invalid plan fails validation\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Apply mutation — replaces target text in source file",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should replace original text with replacement text\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Apply mutation — original source file remains unchanged",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should leave the original source file unchanged\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Respect location — mutation only applied at specified row/col",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should replace only at the specified row/col\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Respect location — text mismatch at location reports error",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should report an error when original text does not match\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Respect location — replacement at correct column boundary",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"replacement at correct column boundary\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Run test — prints 👾 survived when tests pass",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should print 👾 survived\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Run test — prints 🏹 killed when tests fail",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should print 🏹 killed\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Orchestrate — applies each mutation individually to source",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should apply a mutation from plan\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Orchestrate — source reverted between mutations",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"source reverted between mutations\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Orchestrate — writes JSON report with killed field",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should include killed field in the JSON report\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Orchestrate — partial report if processing stops early",
+      "skip": "Task completed",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"should write a partial report\" tests/test.lua"
+      }
+    },
+    {
+      "description": "Orchestrate — source files restored after completion",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"source restored after completion\" tests/test.lua"
+      }
+    },
+    {
+      "description": "CLI driver — all mutants killed exits 0",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"CLI driver exits 0 when all killed\" tests/test.lua"
+      }
+    },
+    {
+      "description": "CLI driver — at least one mutant survives exits 1",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"CLI driver exits 1 when survivor\" tests/test.lua"
+      }
+    },
+    {
+      "description": "CLI driver — missing required flag exits 2",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"CLI driver exits 2 when flag omitted\" tests/test.lua"
+      }
+    },
+    {
+      "description": "CLI driver — invalid --fail value exits 2",
+      "verify": {
+        "type": "command",
+        "run": "busted -t \"CLI driver exits 2 when --fail invalid\" tests/test.lua"
+      }
+    }
+  ]
+}
