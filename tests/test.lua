@@ -110,6 +110,11 @@ describe("validate_plan_file", function()
     it("should validate a mutation plan JSON file against the schema", function()
         assert.is_true(mutator.validate_plan_file("tests/data/mutation-plan.json"))
     end)
+
+    it("should fail validation for an invalid plan file", function()
+        local ok = pcall(mutator.validate_plan_file, "tests/data/invalid-mutation-plan.json")
+        assert.is_falsy(ok)
+    end)
 end)
 
 describe("apply_mutations_from_plan", function()
