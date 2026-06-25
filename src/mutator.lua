@@ -45,7 +45,7 @@ mutator.KILLED_MESSAGE = "🏹 killed"
 local RECORD_SEPARATOR = "---END---"
 local MUTATION_SCHEMA_PATH = "/workdir/schemas/mutation-plan.schema.json"
 
-local FIELD_SPECS = {
+local REPORT_FIELDS = {
     {name = "file_path"},
     {name = "start_row", convert = tonumber},
     {name = "start_col", convert = tonumber},
@@ -91,7 +91,7 @@ local function mutation_extraction_script()
         "    data = json.load(f)",
         "for mutation in data[\"mutations\"]:",
     }
-    for _, spec in ipairs(FIELD_SPECS) do
+    for _, spec in ipairs(REPORT_FIELDS) do
         table.insert(lines, '    print(mutation["' .. spec.name .. '"])')
     end
     table.insert(lines, '    print("' .. RECORD_SEPARATOR .. '")')
@@ -104,7 +104,7 @@ local function parse_mutation_records(line_iterator)
     for line in line_iterator do
         if line == RECORD_SEPARATOR then
             local mutation = {}
-            for index, spec in ipairs(FIELD_SPECS) do
+            for index, spec in ipairs(REPORT_FIELDS) do
                 mutation[spec.name] = spec.convert and spec.convert(fields[index]) or fields[index]
             end
             table.insert(mutations, mutation)
@@ -140,7 +140,7 @@ end
 
 function mutator.report_mutation_outcome(mutation, killed)
     local fields = {}
-    for _, spec in ipairs(FIELD_SPECS) do
+    for _, spec in ipairs(REPORT_FIELDS) do
         local value = mutation[spec.name]
         if spec.convert then
             table.insert(fields, '"' .. spec.name .. '":' .. value)
