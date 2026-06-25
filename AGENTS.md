@@ -55,13 +55,16 @@
 |----------|--------------------------------------------|
 | `check`  | `luacheck src`                             |
 | `tests`  | `busted tests/test.lua`                    |
+| `verify` | `qed verify specs/mutiverse.spec.json`     |
 | `init`   | `parse tests` (first-time setup)           |
 
 ## TDD workflow
 
 - Red: Write failing test. Green: Minimal implementation. Refactor: Improve without changing behavior.
-- Task tracking via `acceptance.json` (gitignored, follows `../tdd/acceptance.schema.json`).
-- Each task has `id`, `title`, `acceptance_criteria`, `evaluation_command`, `gold` (current/done/backlog), `passes`.
+- Task tracking via `specs/mutiverse.spec.json` (qed spec format).
+- Each criterion has a `description`, `verify` block (type + command), and optional `schedule`/`skip`.
+- Completed criteria use `skip: "Task completed"`; active criteria have no skip.
+- Run `make verify` to check all criteria via qed.
 
 ## Project structure
 
@@ -72,7 +75,9 @@ src/              Lua source modules
 tests/            Busted test suite
   test.lua        All tests
   data/           Fixture files (Python, R)
-schema/           JSON Schema for mutation plan
+specs/            QED spec (acceptance criteria)
+  mutiverse.spec.json  All 19 criteria
+schemas/          JSON Schema for mutation plan
 assets/           Diagrams and images
 ```
 
