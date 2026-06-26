@@ -156,15 +156,23 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
     local mutations = parse_json_mutations(plan_path)
     local mutants = {}
     local report_entries = {}
+    local killed_count = 0
+    local survived_count = 0
     for _, mutation in ipairs(mutations) do
         local source = file_io.read(mutation.file_path)
         local mutant = mutator.apply_mutation(mutation, source)
         table.insert(mutants, mutant)
         local killed = run_test_with_mutant(mutation, mutant, source, test_command)
+        if killed then
+            killed_count = killed_count + 1
+        else
+            survived_count = survived_count + 1
+        end
         table.insert(report_entries, mutator.report_mutation_outcome(mutation, killed))
         local json = "[" .. table.concat(report_entries, ",") .. "]"
         file_io.write(report_path, json)
     end
+    print(killed_count .. " killed, " .. survived_count .. " survived. Report written to " .. report_path)
     return mutants
 end
 
