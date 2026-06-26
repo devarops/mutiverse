@@ -111,7 +111,7 @@
       "description": "CLI driver — all mutants killed exits 0",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command false --report /tmp/report.json --fail fast"
       }
     },
     {
