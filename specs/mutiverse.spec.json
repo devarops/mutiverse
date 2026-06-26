@@ -48,7 +48,7 @@
       "description": "Respect location — replacement at correct column boundary",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "busted --filter \"should replace at the correct column boundary\" tests/test.lua"
       }
     },
     {

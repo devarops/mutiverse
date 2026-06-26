@@ -45,6 +45,11 @@ describe("apply_mutation", function()
         local ok = pcall(mutator.apply_mutation, {start_row=10, start_col=0, end_col=1, original="a", replacement="z"}, "abc")
         assert.is_falsy(ok)
     end)
+
+    it("should replace at the correct column boundary", function()
+        local mutant = mutator.apply_mutation({start_row=0, start_col=4, end_col=7, original="bbb", replacement="x"}, "aaa bbb ccc")
+        assert.equals("aaa x ccc", mutant)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
