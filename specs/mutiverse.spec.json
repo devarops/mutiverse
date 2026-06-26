@@ -97,7 +97,7 @@
       "description": "Orchestrate — source files restored after completion",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "busted --filter \"should restore source files after completion\" tests/test.lua"
       }
     },
     {

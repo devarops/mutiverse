@@ -196,6 +196,21 @@ describe("apply_mutations_from_plan", function()
         os.remove(plan_path)
         os.remove(report_path)
     end)
+
+    it("should restore source files after completion", function()
+        local report_path = os.tmpname()
+        os.remove(report_path)
+
+        local original_py = file_io.read("tests/data/transformations.py")
+        local original_r = file_io.read("tests/data/do_nothing.R")
+
+        mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
+
+        assert.equals(original_py, file_io.read("tests/data/transformations.py"))
+        assert.equals(original_r, file_io.read("tests/data/do_nothing.R"))
+
+        os.remove(report_path)
+    end)
 end)
 
 describe("report_mutation_outcome", function()
