@@ -211,6 +211,13 @@ describe("apply_mutations_from_plan", function()
 
         os.remove(report_path)
     end)
+
+    it("should print summary line with killed/survived counts and report path", function()
+        local content = run_lua([[local mutator = require('mutator'); mutator.apply_mutations_from_plan('tests/data/mutation-plan.json', 'true', '/tmp/summary-test-report.json')]])
+        assert_contains(content, "killed")
+        assert_contains(content, "survived")
+        assert_contains(content, "/tmp/summary-test-report.json")
+    end)
 end)
 
 describe("report_mutation_outcome", function()
