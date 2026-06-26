@@ -138,6 +138,16 @@ local function json_escape(s)
     return s:gsub("\\", "\\\\"):gsub('"', '\\"')
 end
 
+local function format_summary(killed, survived, report_path)
+    return killed .. " killed, " .. survived .. " survived. Report written to " .. report_path
+end
+
+local function write_report_entry(report_path, report_entries, mutation, killed)
+    table.insert(report_entries, mutator.report_mutation_outcome(mutation, killed))
+    local json = "[" .. table.concat(report_entries, ",") .. "]"
+    file_io.write(report_path, json)
+end
+
 function mutator.report_mutation_outcome(mutation, killed)
     local fields = {}
     for _, spec in ipairs(REPORT_FIELDS) do
@@ -168,11 +178,9 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         else
             survived_count = survived_count + 1
         end
-        table.insert(report_entries, mutator.report_mutation_outcome(mutation, killed))
-        local json = "[" .. table.concat(report_entries, ",") .. "]"
-        file_io.write(report_path, json)
+        write_report_entry(report_path, report_entries, mutation, killed)
     end
-    print(killed_count .. " killed, " .. survived_count .. " survived. Report written to " .. report_path)
+    print(format_summary(killed_count, survived_count, report_path))
     return mutants
 end
 

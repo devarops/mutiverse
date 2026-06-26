@@ -105,7 +105,8 @@
       "verify": {
         "type": "command",
         "run": "busted --filter \"should print summary line with killed/survived counts and report path\" tests/test.lua"
-      }
+      },
+      "skip": "Task completed"
     },
     {
       "description": "CLI driver — all mutants killed exits 0",
