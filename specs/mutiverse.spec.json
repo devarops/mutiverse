@@ -76,7 +76,7 @@
       "description": "Orchestrate — source reverted between mutations",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "busted --filter \"should revert source between mutations\" tests/test.lua"
       }
     },
     {

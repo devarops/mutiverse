@@ -171,6 +171,31 @@ describe("apply_mutations_from_plan", function()
         assert_contains(content, "tests/data/transformations.py")
         os.remove(report_path)
     end)
+
+    it("should revert source between mutations", function()
+        local source_path = os.tmpname()
+        local plan_path = os.tmpname()
+        local report_path = os.tmpname()
+        os.remove(report_path)
+
+        local original_content = "abcd"
+        file_io.write(source_path, original_content)
+
+        local plan_json = string.format(
+            '{"mutations":[{"file_path":"%s","start_row":0,"end_row":0,"start_col":0,"end_col":2,"original":"ab","replacement":"XX","operator":"CONSTANT_NUMERIC_FLIP"},{"file_path":"%s","start_row":0,"end_row":0,"start_col":0,"end_col":2,"original":"ab","replacement":"YY","operator":"CONSTANT_NUMERIC_FLIP"}]}',
+            source_path, source_path
+        )
+        file_io.write(plan_path, plan_json)
+
+        local mutants = mutator.apply_mutations_from_plan(plan_path, "true", report_path)
+
+        local content_after = file_io.read(source_path)
+        assert.equals(original_content, content_after)
+
+        os.remove(source_path)
+        os.remove(plan_path)
+        os.remove(report_path)
+    end)
 end)
 
 describe("report_mutation_outcome", function()
