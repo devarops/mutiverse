@@ -104,7 +104,7 @@
       "description": "Orchestrate — prints summary line with killed/survived counts and report path",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "busted --filter \"should print summary line with killed/survived counts and report path\" tests/test.lua"
       }
     },
     {
