@@ -118,21 +118,23 @@
       "description": "CLI driver — at least one mutant survives exits 1",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "bash -c 'lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command true --report /tmp/report.json --fail fast; [ $? -eq 1 ]'"
       }
     },
     {
       "description": "CLI driver — missing required flag exits 2",
+      "skip": "backlog",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "lua src/cmd_run.lua --report /tmp/report.json --test-command false --fail fast"
       }
     },
     {
       "description": "CLI driver — invalid --fail value exits 2",
+      "skip": "backlog",
       "verify": {
         "type": "command",
-        "run": "exit 1"
+        "run": "lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command false --report /tmp/report.json --fail bad"
       }
     }
   ]

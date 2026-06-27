@@ -20,4 +20,8 @@ for i = 1, #arg, 2 do
     end
 end
 
-mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
+local _, killed, survived = mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
+
+if survived > 0 then
+    os.exit(1)
+end

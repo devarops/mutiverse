@@ -181,7 +181,7 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
         write_report_entry(report_path, report_entries, mutation, killed)
     end
     print(format_summary(killed_count, survived_count, report_path))
-    return mutants
+    return mutants, killed_count, survived_count
 end
 
 return mutator
