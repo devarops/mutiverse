@@ -162,6 +162,13 @@
         "type": "command",
         "run": "bash -c 'msg=$(lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command false 2>&1); ex=$?; [ $ex -eq 2 ] && [ -n \"$msg\" ]'"
       }
+    },
+    {
+      "description": "Validate plan — plan referencing non-existent file fails validation (exit 1)",
+      "verify": {
+        "type": "command",
+        "run": "bash -c 'lua src/cmd_validate.lua --plan enso/tests/mutation-plan.json; [ $? -eq 1 ]'"
+      }
     }
   ]
 }
