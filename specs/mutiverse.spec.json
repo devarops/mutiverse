@@ -141,6 +141,13 @@
         "type": "command",
         "run": "lua src/cmd_validate.lua --plan tests/data/mutation-plan.json"
       }
+    },
+    {
+      "description": "CLI validate — missing --plan flag exits 2",
+      "verify": {
+        "type": "command",
+        "run": "bash -c 'lua src/cmd_validate.lua; [ $? -eq 2 ]'"
+      }
     }
   ]
 }
