@@ -1,5 +1,31 @@
 # Backlog
 
+## `os.execute` exit code mangling with `docker exec`
+
+When `--test-command` wraps a command in `docker exec`, Lua's
+`os.execute` may misinterpret the exit code because `docker exec`
+adds its own encoding on top of the container process's exit status.
+This can cause tests that pass inside the container (exit 0) to be
+reported as killed, or vice versa.
+
+**Status:** Not yet addressed. Needs a cross-container execution
+strategy — either run tests from within the target container where
+`os.execute` sees the raw exit code, or parse `docker exec`'s exit
+code encoding explicitly.
+
+## `split_lines` skips blank lines, misaligning `start_row` with source
+
+`gmatch("[^\n]+")` in `split_lines` silently drops blank lines, so
+the `lines` table has fewer entries than the actual line count. Any
+mutation targeting a line after a blank line gets an off-by-N error
+on `start_row`, manifesting as `"original text does not match at
+specified location"`.
+
+**Status:** Not yet addressed. Fix is a straightforward replacement
+of `split_lines` with a version that preserves blank lines (e.g.,
+iterate via `find("\n")` and `sub`). Existing test fixtures happen
+not to trigger the bug because their targets precede blank lines.
+
 ## CLI design (from 2026-06-21 design session)
 
 ### Layout in target project
