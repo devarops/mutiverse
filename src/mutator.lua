@@ -81,6 +81,16 @@ end
 function mutator.validate_plan_file(plan_path)
     local command = "jsonschema -i " .. plan_path .. " " .. MUTATION_SCHEMA_PATH
     assert(os.execute(command) == 0)
+
+    local content = file_io.read(plan_path)
+    for file_path in content:gmatch('"file_path"%s*:%s*"([^"]+)"') do
+        local f = io.open(file_path, "r")
+        if not f then
+            error("Referenced file does not exist: " .. file_path)
+        end
+        f:close()
+    end
+
     return true
 end
 
