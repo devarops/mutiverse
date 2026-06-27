@@ -1,6 +1,9 @@
 package.path = "src/?.lua;" .. package.path
 local mutator = require("mutator")
 
+local EXIT_FAILURE = 1
+local EXIT_USAGE = 2
+
 local plan_path
 local test_command
 local report_path
@@ -21,15 +24,15 @@ for i = 1, #arg, 2 do
 end
 
 if not plan_path then
-    os.exit(2)
+    os.exit(EXIT_USAGE)
 end
 
 if fail_mode ~= "fast" and fail_mode ~= "slow" then
-    os.exit(2)
+    os.exit(EXIT_USAGE)
 end
 
 local _, killed, survived = mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
 
 if survived > 0 then
-    os.exit(1)
+    os.exit(EXIT_FAILURE)
 end
