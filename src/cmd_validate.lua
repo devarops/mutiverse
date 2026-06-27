@@ -8,4 +8,8 @@ for i = 1, #arg, 2 do
     end
 end
 
+if not plan_path then
+    os.exit(2)
+end
+
 mutator.validate_plan_file(plan_path)
