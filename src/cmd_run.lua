@@ -20,6 +20,10 @@ for i = 1, #arg, 2 do
     end
 end
 
+if not plan_path then
+    os.exit(2)
+end
+
 local _, killed, survived = mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
 
 if survived > 0 then
