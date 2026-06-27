@@ -28,6 +28,7 @@ if not plan_path then
 end
 
 if fail_mode ~= "fast" and fail_mode ~= "slow" then
+    io.stderr:write("Error: --fail must be 'fast' or 'slow'\n")
     os.exit(EXIT_USAGE)
 end
 
