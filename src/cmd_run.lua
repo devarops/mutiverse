@@ -24,6 +24,10 @@ if not plan_path then
     os.exit(2)
 end
 
+if fail_mode ~= "fast" and fail_mode ~= "slow" then
+    os.exit(2)
+end
+
 local _, killed, survived = mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
 
 if survived > 0 then
