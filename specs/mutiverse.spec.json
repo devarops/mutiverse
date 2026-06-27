@@ -123,10 +123,9 @@
     },
     {
       "description": "CLI driver — missing required flag exits 2",
-      "skip": "backlog",
       "verify": {
         "type": "command",
-        "run": "lua src/cmd_run.lua --report /tmp/report.json --test-command false --fail fast"
+      "run": "bash -c 'lua src/cmd_run.lua --report /tmp/report.json --test-command false --fail fast; [ $? -eq 2 ]'"
       }
     },
     {
@@ -134,7 +133,7 @@
       "skip": "backlog",
       "verify": {
         "type": "command",
-        "run": "lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command false --report /tmp/report.json --fail bad"
+        "run": "bash -c 'lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command false --report /tmp/report.json --fail bad; [ $? -eq 2 ]'"
       }
     }
   ]
