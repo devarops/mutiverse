@@ -130,7 +130,6 @@
     },
     {
       "description": "CLI driver — invalid --fail value exits 2",
-      "skip": "backlog",
       "verify": {
         "type": "command",
         "run": "bash -c 'lua src/cmd_run.lua --plan tests/data/mutation-plan.json --test-command false --report /tmp/report.json --fail bad; [ $? -eq 2 ]'"
