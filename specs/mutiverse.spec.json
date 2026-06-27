@@ -148,6 +148,13 @@
         "type": "command",
         "run": "bash -c 'lua src/cmd_validate.lua; [ $? -eq 2 ]'"
       }
+    },
+    {
+      "description": "CLI validate — invalid plan exits 1",
+      "verify": {
+        "type": "command",
+        "run": "bash -c 'lua src/cmd_validate.lua --plan tests/data/invalid-mutation-plan.json; [ $? -eq 1 ]'"
+      }
     }
   ]
 }
