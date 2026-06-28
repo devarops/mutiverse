@@ -1,11 +1,10 @@
-FROM rocker/tidyverse:latest
+FROM ubuntu:26.04
 WORKDIR /workdir
 
 # Install system dependencies
 RUN apt update && apt install --yes \
     curl \
     git \
-    lua5.4 \
     luarocks \
     nodejs \
     npm \
