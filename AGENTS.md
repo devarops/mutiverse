@@ -67,6 +67,19 @@
 - Completed criteria use `skip: "Task completed"`; active criteria have no skip.
 - Run `make verify` to check all criteria via qed.
 
+## ATDD four-layer separation
+
+Acceptance Test Driven Development separates concerns into four layers:
+
+1. **Test Cases** — written in problem-domain language from an external user perspective.
+2. **Domain Specific Language** — shared between test cases, translates domain language into test steps.
+3. **Protocol Drivers** — translate DSL commands into interactions with the System Under Test.
+4. **System Under Test** — deployed in production-like environments via infrastructure-as-code.
+
+Unit tests and acceptance tests verify different concerns:
+- **Unit tests** validate internal behavior from a developer perspective. They exercise individual functions in isolation from infrastructure. They answer *does the code work correctly?*
+- **Acceptance tests** validate external behavior from a user perspective. They exercise the full system through public interfaces in realistic environments. They answer *does the system solve the right problem?*
+
 ## Project structure
 
 ```
