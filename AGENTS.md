@@ -12,6 +12,7 @@
 
 - **Module path**: `package.path = 'src/?.lua;' .. package.path` is required before `require("mutator")` or `require("file_io")`.
 - **Lua version**: Lua 5.1. `os.execute` returns a numeric exit code (0 for success, non-zero for failure), not a boolean.
+- **Host/container Lua must match**: `cmd_run.lua` and `mutator.lua` run on the **host** system, not inside the Docker container. `os.execute` in Lua 5.2+ returns `ok, reason, code` (boolean/nil + string + number) instead of a plain numeric exit code. If the host's Lua version differs from the container's, `is_mutation_killed` breaks silently — always returning `true`. Use `lua -v` on both host and container to verify alignment.
 - **Python3** is required at runtime. The module writes a Python script to a temp file and executes it with `python3` to extract mutation fields from a JSON plan.
 - **jsonschema** CLI (from `python3-jsonschema` package) is required at runtime for `validate_plan_file`.
 - **Capturing stdout**: Use `io.popen` for subprocess output:
