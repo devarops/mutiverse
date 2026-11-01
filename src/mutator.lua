@@ -42,10 +42,10 @@ end
 
 mutator.SURVIVED_MESSAGE = "👾 survived"
 mutator.KILLED_MESSAGE = "🏹 killed"
-local RECORD_SEPARATOR = "---END---"
+local MUTATION_RECORD_DELIMITER = "---END---"
 local MUTATION_SCHEMA_PATH = "/workdir/schemas/mutation-plan.schema.json"
 
-local REPORT_FIELDS = {
+local REPORT_FIELD_SPECS = {
     {name = "file_path"},
     {name = "start_row", convert = tonumber},
     {name = "start_col", convert = tonumber},
@@ -81,6 +81,16 @@ end
 function mutator.validate_plan_file(plan_path)
     local command = "jsonschema -i " .. plan_path .. " " .. MUTATION_SCHEMA_PATH
     assert(os.execute(command) == 0)
+
+    local content = file_io.read(plan_path)
+    for file_path in content:gmatch('"file_path"%s*:%s*"([^"]+)"') do
+        local f = io.open(file_path, "r")
+        if not f then
+            error("Referenced file does not exist: " .. file_path)
+        end
+        f:close()
+    end
+
     return true
 end
 
@@ -91,10 +101,10 @@ local function mutation_extraction_script()
         "    data = json.load(f)",
         "for mutation in data[\"mutations\"]:",
     }
-    for _, spec in ipairs(REPORT_FIELDS) do
+    for _, spec in ipairs(REPORT_FIELD_SPECS) do
         table.insert(lines, '    print(mutation["' .. spec.name .. '"])')
     end
-    table.insert(lines, '    print("' .. RECORD_SEPARATOR .. '")')
+    table.insert(lines, '    print("' .. MUTATION_RECORD_DELIMITER .. '")')
     return table.concat(lines, "\n") .. "\n"
 end
 
@@ -102,9 +112,9 @@ local function parse_mutation_records(line_iterator)
     local mutations = {}
     local fields = {}
     for line in line_iterator do
-        if line == RECORD_SEPARATOR then
+        if line == MUTATION_RECORD_DELIMITER then
             local mutation = {}
-            for index, spec in ipairs(REPORT_FIELDS) do
+            for index, spec in ipairs(REPORT_FIELD_SPECS) do
                 mutation[spec.name] = spec.convert and spec.convert(fields[index]) or fields[index]
             end
             table.insert(mutations, mutation)
@@ -138,9 +148,19 @@ local function json_escape(s)
     return s:gsub("\\", "\\\\"):gsub('"', '\\"')
 end
 
+local function format_summary(killed, survived, report_path)
+    return killed .. " killed, " .. survived .. " survived. Report written to " .. report_path
+end
+
+local function write_report_entry(report_path, report_entries, mutation, killed)
+    table.insert(report_entries, mutator.report_mutation_outcome(mutation, killed))
+    local json = "[" .. table.concat(report_entries, ",") .. "]"
+    file_io.write(report_path, json)
+end
+
 function mutator.report_mutation_outcome(mutation, killed)
     local fields = {}
-    for _, spec in ipairs(REPORT_FIELDS) do
+    for _, spec in ipairs(REPORT_FIELD_SPECS) do
         local value = mutation[spec.name]
         if spec.convert then
             table.insert(fields, '"' .. spec.name .. '":' .. value)
@@ -156,16 +176,22 @@ function mutator.apply_mutations_from_plan(plan_path, test_command, report_path)
     local mutations = parse_json_mutations(plan_path)
     local mutants = {}
     local report_entries = {}
+    local killed_count = 0
+    local survived_count = 0
     for _, mutation in ipairs(mutations) do
         local source = file_io.read(mutation.file_path)
         local mutant = mutator.apply_mutation(mutation, source)
         table.insert(mutants, mutant)
         local killed = run_test_with_mutant(mutation, mutant, source, test_command)
-        table.insert(report_entries, mutator.report_mutation_outcome(mutation, killed))
-        local json = "[" .. table.concat(report_entries, ",") .. "]"
-        file_io.write(report_path, json)
+        if killed then
+            killed_count = killed_count + 1
+        else
+            survived_count = survived_count + 1
+        end
+        write_report_entry(report_path, report_entries, mutation, killed)
     end
-    return mutants
+    print(format_summary(killed_count, survived_count, report_path))
+    return mutants, killed_count, survived_count
 end
 
 return mutator

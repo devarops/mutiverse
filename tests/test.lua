@@ -45,6 +45,11 @@ describe("apply_mutation", function()
         local ok = pcall(mutator.apply_mutation, {start_row=10, start_col=0, end_col=1, original="a", replacement="z"}, "abc")
         assert.is_falsy(ok)
     end)
+
+    it("should replace at the correct column boundary", function()
+        local mutant = mutator.apply_mutation({start_row=0, start_col=4, end_col=7, original="bbb", replacement="x"}, "aaa bbb ccc")
+        assert.equals("aaa x ccc", mutant)
+    end)
 end)
 
 describe("apply_mutation_to_file", function()
@@ -165,6 +170,53 @@ describe("apply_mutations_from_plan", function()
         local content = file_io.read(report_path)
         assert_contains(content, "tests/data/transformations.py")
         os.remove(report_path)
+    end)
+
+    it("should revert source between mutations", function()
+        local source_path = os.tmpname()
+        local plan_path = os.tmpname()
+        local report_path = os.tmpname()
+        os.remove(report_path)
+
+        local original_content = "abcd"
+        file_io.write(source_path, original_content)
+
+        local plan_json = string.format(
+            '{"mutations":[{"file_path":"%s","start_row":0,"end_row":0,"start_col":0,"end_col":2,"original":"ab","replacement":"XX","operator":"CONSTANT_NUMERIC_FLIP"},{"file_path":"%s","start_row":0,"end_row":0,"start_col":0,"end_col":2,"original":"ab","replacement":"YY","operator":"CONSTANT_NUMERIC_FLIP"}]}',
+            source_path, source_path
+        )
+        file_io.write(plan_path, plan_json)
+
+        local mutants = mutator.apply_mutations_from_plan(plan_path, "true", report_path)
+
+        local content_after = file_io.read(source_path)
+        assert.equals(original_content, content_after)
+
+        os.remove(source_path)
+        os.remove(plan_path)
+        os.remove(report_path)
+    end)
+
+    it("should restore source files after completion", function()
+        local report_path = os.tmpname()
+        os.remove(report_path)
+
+        local original_py = file_io.read("tests/data/transformations.py")
+        local original_r = file_io.read("tests/data/do_nothing.R")
+
+        mutator.apply_mutations_from_plan("tests/data/mutation-plan.json", "true", report_path)
+
+        assert.equals(original_py, file_io.read("tests/data/transformations.py"))
+        assert.equals(original_r, file_io.read("tests/data/do_nothing.R"))
+
+        os.remove(report_path)
+    end)
+
+    it("should print summary line with killed/survived counts and report path", function()
+        local content = run_lua([[local mutator = require('mutator'); mutator.apply_mutations_from_plan('tests/data/mutation-plan.json', 'true', '/tmp/summary-test-report.json')]])
+        assert_contains(content, "killed")
+        assert_contains(content, "survived")
+        assert_contains(content, "/tmp/summary-test-report.json")
     end)
 end)
 

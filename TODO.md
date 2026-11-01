@@ -1,5 +1,18 @@
 # Backlog
 
+## `split_lines` skips blank lines, misaligning `start_row` with source
+
+`gmatch("[^\n]+")` in `split_lines` silently drops blank lines, so
+the `lines` table has fewer entries than the actual line count. Any
+mutation targeting a line after a blank line gets an off-by-N error
+on `start_row`, manifesting as `"original text does not match at
+specified location"`.
+
+**Status:** Not yet addressed. Fix is a straightforward replacement
+of `split_lines` with a version that preserves blank lines (e.g.,
+iterate via `find("\n")` and `sub`). Existing test fixtures happen
+not to trigger the bug because their targets precede blank lines.
+
 ## CLI design (from 2026-06-21 design session)
 
 ### Layout in target project
@@ -66,32 +79,3 @@ mutiverse run --plan mutation-plan.json --report report.json --test-command "mak
 - `mutator.lua`: library (Level 1-2: pure functions + artifact production).
 - `cmd_plan.lua` / `cmd_run.lua`: thin CLI drivers that parse flags and call `mutator.*`.
 - `install` is handled entirely by the shell wrapper.
-
----
-
-## qed installation in Dockerfile
-
-Steps to bake qed into the Docker image (no Nix dependency):
-
-```dockerfile
-# Install elan (Lean version manager)
-RUN apt install --yes curl
-RUN curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-
-# Install the Lean toolchain used by qed
-RUN . "$HOME/.elan/env" && elan toolchain install leanprover/lean4:v4.28.0
-
-# Clone and build qed
-RUN git clone https://github.com/tskovlund/qed.git /opt/qed
-RUN . "$HOME/.elan/env" && cd /opt/qed && lake build
-
-# Add qed to PATH
-RUN ln -sf /opt/qed/.lake/build/bin/qed /usr/local/bin/qed
-```
-
-**Notes:**
-- `lake build` compiles 68 targets including all formal proofs (~2–5 minutes).
-- Lean toolchain is ~500MB download.
-- No devbox, no Nix — only `curl` and `git` as build dependencies.
-- qed has no releases yet, so building from source is the only option.
-- Keep this layer after `apt install` and before `COPY . /workdir` to leverage Docker caching.
