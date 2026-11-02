@@ -4,8 +4,8 @@
 
 - `make tests` runs `busted tests/test.lua` inside Docker.
 - `make check` runs `luacheck src` for linting.
-- `docker exec mutiverse_ci make tests` to run tests in the container.
-- Container name follows the pattern `${PWD##*/}_ci`.
+- `docker exec mutiverse_dev make tests` to run tests in the container.
+- Container name follows the pattern `${PWD##*/}_dev`.
 - `docker compose up -d` to start the container in the background.
 
 ## Lua environment

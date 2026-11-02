@@ -24,7 +24,7 @@ Mutiverse is the core engine that applies mutations, runs your test suite, and r
 
 ```bash
 docker compose up -d
-docker exec mutiverse_ci make tests
+docker exec mutiverse_dev make tests
 ```
 
 ## Coming soon
